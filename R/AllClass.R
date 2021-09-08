@@ -1,0 +1,174 @@
+##### gp CLASS DEFINITIONS ########
+#' @docType class
+#' @title The \code{\link{gp}} class
+#' @description This is an S4 class definition for \code{\link{gp}} in the \code{\link{GaSP}}
+#' package.
+#' 
+#' @slot formula an object of \code{formula} class that specifies regressors; see \code{\link[stats]{formula}} for details.
+#' @slot output a numerical vector including observations or outputs in a GaSP
+#' @slot input a matrix including inputs in a GaSP
+#' 
+#' @slot param a list including values for regression parameters, correlation parameters, 
+#' and nugget variance parameter.
+#' The specification of \strong{param} should depend on the covariance model. 
+#' \itemize{
+#' \item{The regression parameters are denoted by \strong{coeff}. Default value is \eqn{\mathbf{0}}.}
+#' \item The marginal variance or partial sill is denoted by \strong{sig2}. Default value is 1. 
+#' \item{The nugget variance parameter is denoted by \strong{nugget} for all covariance models. 
+#' Default value is 0.}
+#' \item{For the Confluent Hypergeometric class, \strong{range} is used to denote the range parameter \eqn{\beta}. 
+#' \strong{tail} is used to denote the tail decay parameter \eqn{\alpha}. \strong{nu} is used to denote the 
+#' smoothness parameter \eqn{\nu}.}
+#' \item{For the generalized Cauchy class, \strong{range} is used to denote the range parameter \eqn{\phi}. 
+#' \strong{tail} is used to denote the tail decay parameter \eqn{\alpha}. \strong{nu} is used to denote the 
+#' smoothness parameter \eqn{\nu}.}
+#' \item{For the Matérn class, \strong{range} is used to denote the range parameter \eqn{\phi}. 
+#' \strong{nu} is used to denote the smoothness parameter \eqn{\nu}. When \eqn{\nu=0.5}, the 
+#' Matérn class corresponds to the exponential covariance.}  
+#' \item{For the powered-exponential class, \strong{range} is used to denote the range parameter \eqn{\phi}.
+#' \strong{nu} is used to denote the smoothness parameter. When \eqn{\nu=2}, the powered-exponential class
+#' corresponds to the Gaussian covariance.}
+#' }
+#' @slot cov.model a list of two strings: \strong{family}, \strong{form}, where \strong{family} indicates the family of covariance functions 
+#' including the Confluent Hypergeometric class, the Matérn class, the Cauchy class, the powered-exponential class. \strong{form} indicates the 
+#' specific form of covariance structures including the isotropic form, tensor form, automatic relevance determination form. 
+#' \describe{
+#' \item{\strong{family}}{
+#' \describe{
+#' \item{CH}{The Confluent Hypergeometric correlation function is given by 
+#' \deqn{C(h) = \frac{\Gamma(\nu+\alpha)}{\Gamma(\nu)} 
+#' \mathcal{U}\left(\alpha, 1-\nu, \left(\frac{h}{\beta}\right)^2\right),}
+#' where \eqn{\alpha} is the tail decay parameter. \eqn{\beta} is the range parameter.
+#' \eqn{\nu} is the smoothness parameter. \eqn{\mathcal{U}(\cdot)} is the confluent hypergeometric
+#' function of the second kind. For details about this covariance, 
+#' see Ma and Bhadra (2019) at \url{https://arxiv.org/abs/1911.05865}.  
+#' }
+#' \item{cauchy}{The generalized Cauchy covariance is given by
+#' \deqn{C(h) = \left\{ 1 + \left( \frac{h}{\phi} \right)^{\nu}  
+#'             \right\}^{-\alpha/\nu},}
+#' where \eqn{\phi} is the range parameter. \eqn{\alpha} is the tail decay parameter.
+#' \eqn{\nu} is the smoothness parameter with default value at 2.
+#'}
+#'
+#' \item{matern}{The Matérn correlation function is given by
+#' \deqn{C(h)=\frac{2^{1-\nu}}{\Gamma(\nu)} \left( \frac{h}{\phi} \right)^{\nu} 
+#' \mathcal{K}_{\nu}\left( \frac{h}{\phi} \right),}
+#' where \eqn{\phi} is the range parameter. \eqn{\nu} is the smoothness parameter. 
+#' \eqn{\mathcal{K}_{\nu}(\cdot)} is the modified Bessel function of the second kind of order \eqn{\nu}.
+#' }
+#' \item{exp}{The exponential correlation function is given by 
+#' \deqn{C(h)=\exp(-h/\phi),}
+#' where \eqn{\phi} is the range parameter. This is the Matérn correlation with \eqn{\nu=0.5}.
+#' }
+#' \item{matern_3_2}{The Matérn correlation with \eqn{\nu=1.5}.}
+#' \item{matern_5_2}{The Matérn correlation with \eqn{\nu=2.5}.}
+#'
+#'
+#' \item{powexp}{The powered-exponential correlation function is given by
+#'                \deqn{C(h)=\exp\left\{-\left(\frac{h}{\phi}\right)^{\nu}\right\},}
+#' where \eqn{\phi} is the range parameter. \eqn{\nu} is the smoothness parameter.
+#' }
+#' \item{gauss}{The Gaussian correlation function is given by 
+#' \deqn{C(h)=\exp\left(-\frac{h^2}{\phi^2}\right),}
+#' where \eqn{\phi} is the range parameter.
+#'  }
+#' }
+#' }
+#' 
+#' \item{\strong{form}}{
+#' \describe{
+#'  \item{isotropic}{This indicates the isotropic form of covariance functions. That is,
+#'  \deqn{C(\mathbf{h}) = C^0(\|\mathbf{h}\|; \boldsymbol \theta),} where \eqn{\| \mathbf{h}\|} denotes the 
+#' Euclidean distance or the great circle distance for data on sphere. \eqn{C^0(\cdot)} denotes 
+#' any isotropic covariance family specified in \strong{family}.}
+#'  \item{tensor}{This indicates the tensor product of correlation functions. That is, 
+#' \deqn{ C(\mathbf{h}) = \prod_{i=1}^d C^0(|h_i|; \boldsymbol \theta_i),}
+#' where \eqn{d} is the dimension of input space. \eqn{h_i} is the distance along the \eqn{i}th input dimension. This type of covariance structure has been often used in Gaussian process emulation for computer experiments.
+#'}
+#'  \item{ARD}{This indicates the automatic relevance determination form. That is, 
+#' \deqn{C(\mathbf{h}) = C^0\left(\sqrt{\sum_{i=1}^d\frac{h_i^2}{\phi^2_i}}; \boldsymbol \theta \right),}
+#' where \eqn{\phi_i} denotes the range parameter along the \eqn{i}th input dimension.}
+#'  }
+#' }
+#'
+#'}
+#' 
+#' @slot smooth.est a logical value. If it is \code{TRUE}, the smoothness parameter 
+#' will be estimated; otherwise the smoothness is not estimated.
+#'
+#' @slot dtype a string indicating the type of distance:
+#' \describe{
+#' \item{Euclidean}{Euclidean distance is used. This is the default choice.}
+#' \item{GCD}{Great circle distance is used for data on sphere.}
+#'}
+#'
+#'@slot loglik a numerical value containing the log-likelihood with current 
+#'\code{\link{gp}} object. 
+#'@slot mcmc a list containing MCMC samples if available.
+#'@slot prior a list containing tuning parameters in prior distribution. This is used only if a Bayes estimation method with informative priors is used.
+#'@slot proposal a list containing tuning parameters in proposal distribution. This is used only if a Bayes estimation method is used.
+#'@slot info a list containing the maximum distance in the input space. It should be 
+#' a vector if \strong{isotropic} covariance is used, otherwise it is vector of maximum
+#' distances along each input dimension
+#' @seealso \link{GPBayes-package}, \code{\link{GaSP}}
+#' @keywords GaSP
+#' @author Pulong Ma \email{mpulong@@gmail.com}
+#' @aliases gp-class 
+#' @export
+setClass(
+  # set class name
+  Class = "gp", 
+
+  # define slots
+  slots = c(
+  formula = "formula",
+  output = "matrix",
+  input = "matrix",
+  param = "list",
+  smooth.est="logical",
+  cov.model = "list",
+  dtype = "character",
+  loglik = "numeric",
+  mcmc = "list",
+  prior = "list",
+  proposal = "list",
+  info = "list")
+)
+
+
+#' @rdname gp-method
+#' @title Print the information an object of the \code{\link{gp}} class
+#' @aliases show,gp-methods
+#' @docType methods
+#' @param object an object of \code{\link{gp}} class
+#' @export
+# Set method to visualize 
+setMethod("show", signature(object="gp"),
+  function(object){
+    str(object)
+    # cat(paste("gp class: ", is(object, "gp")))
+    # cat("\n")
+    # cat(paste("gp@fomula: ",paste0(object@formula, collapse="")))
+    # cat("\n")
+    # cat("gp@output: ")
+    # cat(str(object@output))
+    # cat("gp@input: ")
+    # cat(str(object@input))
+    # cat("gp@param: ")
+    # cat(str(object@param))
+    # cat(paste0("gp@smooth.est: ", object@smooth.est), "\n")
+    # cat("gp@cov.model: ")
+    # cat(str(object@cov.model))
+    # cat(paste0("gp@dtype: ", object@dtype), "\n")
+    # cat(paste0("gp@loglik: ", object@loglik), "\n")
+    # cat("gp@mcmc: ")
+    # cat(str(object@mcmc))
+    # cat("gp@prior: ")
+    # cat(str(object@prior))
+    # cat("gp@proposal: ")
+    # cat(str(object@proposal))
+    # cat("gp@info: ")
+    # cat(str(object@info))
+
+  }
+  )

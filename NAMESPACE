@@ -1,0 +1,37 @@
+import("methods")
+importFrom("utils", "str")
+importFrom("stats", "formula", "model.matrix", "uniroot", "optim")
+importFrom("stats", "quantile", "sd", "qnorm")
+
+export(show)
+
+export(BesselK)
+export(HypergU)
+
+export(matern)
+export(CH)
+export(cauchy)
+export(powexp)
+
+export(cor.to.par)
+export(distance)
+export(kernel)
+export(ikernel)
+export(deriv_kernel)
+export(loglik)
+
+
+export(gp)
+export(gp.optim)
+export(gp.mcmc)
+export(gp.predict)
+export(gp.sim)
+export(gp.fisher)
+export(gp.get.mcmc)
+export(gp.model.adequacy)
+export(GaSP)
+
+
+
+importFrom(Rcpp, evalCpp)
+useDynLib(GPBayes, .registration=TRUE)
