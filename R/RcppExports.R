@@ -12,6 +12,7 @@
 #'
 #' @author Pulong Ma \email{mpulong@@gmail.com}
 #' @seealso \code{\link{CH}}
+#' @return a numerical value
 HypergU <- function(a, b, x) {
     .Call(`_GPBayes_HypergU`, a, b, x)
 }
@@ -25,7 +26,7 @@ HypergU <- function(a, b, x) {
 #'
 #' @author Pulong Ma \email{mpulong@@gmail.com}
 #' @seealso \code{\link{matern}}
-#'
+#' @return a numerical value 
 BesselK <- function(nu, z) {
     .Call(`_GPBayes_BesselK`, nu, z)
 }
@@ -47,6 +48,7 @@ BesselK <- function(nu, z) {
 #' @param nu a numerical value containing the smoothness parameter
 #'
 #' @author Pulong Ma \email{mpulong@@gmail.com}
+#' @return a numerical matrix  
 #' @seealso \link{GPBayes-package}, \code{\link{GaSP}}, \linkS4class{gp}, \code{\link{matern}}, \code{\link{kernel}}, \code{\link{ikernel}}
 CH <- function(d, range, tail, nu) {
     .Call(`_GPBayes_CH`, d, range, tail, nu)
@@ -96,6 +98,7 @@ deriv_ARD_CH <- function(d, range, tail, nu) {
 #' @param nu a numerical value containing the smoothness parameter
 #'
 #' @author Pulong Ma \email{mpulong@@gmail.com}
+#' @return a numerical matrix 
 #' @seealso \link{GPBayes-package}, \code{\link{GaSP}}, \linkS4class{gp}, \code{\link{CH}}, \code{\link{kernel}}, \code{\link{ikernel}}
 #'
 matern <- function(d, range, nu) {
@@ -122,6 +125,7 @@ deriv_ARD_matern <- function(d, range, nu) {
 #' @param nu a numerical value containing the smoothness parameter
 #' 
 #' @author Pulong Ma \email{mpulong@@gmail.com}
+#' @return a numerical matrix 
 #' @seealso \code{\link{kernel}}
 #'
 powexp <- function(d, range, nu) {
@@ -148,6 +152,7 @@ deriv_ARD_powexp <- function(d, range, nu) {
 #' @param nu a numerical value containing the smoothness parameter
 #'
 #' @author Pulong Ma \email{mpulong@@gmail.com}
+#' @return a numerical matrix 
 #' @seealso \code{\link{kernel}}
 #'
 cauchy <- function(d, range, tail, nu) {
@@ -366,6 +371,7 @@ gradient_loglik_xi <- function(par, output, H, d, covmodel, smooth, smoothness_e
 #' is returned; if \strong{type} is \strong{tensor} or \strong{ARD}, a list of distance matrices 
 #' along each input dimension is returned.
 #' @author Pulong Ma \email{mpulong@@gmail.com}
+#' @return a numeric vector or matrix of distances 
 #' @examples
 #' input = seq(0,1,length=20)
 #' d = distance(input, input, type="isotropic", dtype="Euclidean")

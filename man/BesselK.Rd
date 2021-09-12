@@ -11,6 +11,9 @@ BesselK(nu, z)
 
 \item{z}{a real positive value}
 }
+\value{
+a numerical value
+}
 \description{
 This function calls the GSL scientific library to evaluate 
 the modified Bessel function of the second kind.

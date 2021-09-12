@@ -115,6 +115,9 @@ where \eqn{\phi_i} denotes the range parameter along the \eqn{i}th input dimensi
 \item{GCD}{Great circle distance is used for data on sphere.}
 }}
 }
+\value{
+an \code{S4} object of \linkS4class{gp} class
+}
 \description{
 This function constructs the \code{S4} object \linkS4class{gp}  that is used for Gaussian process 
 model fitting and prediction.

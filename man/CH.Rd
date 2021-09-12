@@ -15,6 +15,9 @@ CH(d, range, tail, nu)
 
 \item{nu}{a numerical value containing the smoothness parameter}
 }
+\value{
+a numerical matrix
+}
 \description{
 This function computes the Confluent Hypergeometric correlation function given
 a distance matrix. The Confluent Hypergeometric correlation function is given by 

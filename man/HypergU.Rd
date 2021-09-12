@@ -13,6 +13,9 @@ HypergU(a, b, x)
 
 \item{x}{a real value}
 }
+\value{
+a numerical value
+}
 \description{
 This function calls the GSL scientific library to evaluate 
 the confluent hypergeometric function of the second kind; see Abramowitz and Stegun 1972, p.505.

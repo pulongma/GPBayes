@@ -19,6 +19,8 @@ distance(input1, input2, type = "isotropic", dtype = "Euclidean")
 a R object holding distances for two sets of inputs. If \strong{type} is \strong{isotropic}, a matrix of distances
 is returned; if \strong{type} is \strong{tensor} or \strong{ARD}, a list of distance matrices 
 along each input dimension is returned.
+
+a numeric vector or matrix of distances
 }
 \description{
 This function computes distances for two sets of inputs and returns

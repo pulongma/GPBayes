@@ -13,6 +13,9 @@ matern(d, range, nu)
 
 \item{nu}{a numerical value containing the smoothness parameter}
 }
+\value{
+a numerical matrix
+}
 \description{
 This function computes the Matérn correlation function given
 a distance matrix. The Matérn correlation function is given by

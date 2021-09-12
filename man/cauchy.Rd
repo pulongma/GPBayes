@@ -15,6 +15,9 @@ cauchy(d, range, tail, nu)
 
 \item{nu}{a numerical value containing the smoothness parameter}
 }
+\value{
+a numerical matrix
+}
 \description{
 This function computes the generalized Cauchy correlation function given
 a distance matrix. The generalized Cauchy covariance is given by

@@ -84,6 +84,9 @@ correlation parameter via the \code{R} function \code{\link[stats]{uniroot}}.}
 \item{tol}{a numerical value. This sets the precision of the solution with default value
 specified as the machine precision \code{.Machine$double.eps} in \code{R}.}
 }
+\value{
+a numerical value of correlation parameters
+}
 \description{
 This function finds the correlation parameter given effective range
 }

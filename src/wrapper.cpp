@@ -835,6 +835,7 @@ Eigen::VectorXd gradient_loglik_xi(Eigen::VectorXd par, Eigen::Map<Eigen::Matrix
 //' is returned; if \strong{type} is \strong{tensor} or \strong{ARD}, a list of distance matrices 
 //' along each input dimension is returned.
 //' @author Pulong Ma \email{mpulong@@gmail.com}
+//' @return a numeric vector or matrix of distances 
 //' @examples
 //' input = seq(0,1,length=20)
 //' d = distance(input, input, type="isotropic", dtype="Euclidean")

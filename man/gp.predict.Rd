@@ -30,6 +30,9 @@ for parameter estimation (and hence prediction). This approach takes into accoun
 all model parameters.}
 }}
 }
+\value{
+a list of predictive mean, predictive standard deviation, 95% predictive intervals
+}
 \description{
 This function provides the capability to make prediction based on a GaSP
 when different estimation methods are employed.

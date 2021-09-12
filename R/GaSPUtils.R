@@ -102,6 +102,7 @@
 #' @author Pulong Ma \email{mpulong@@gmail.com}
 #'  
 #' @export
+#' @return an \code{S4} object of \linkS4class{gp} class 
 #' 
 #' @examples  
 #' code = function(x){
@@ -739,7 +740,7 @@ gp.optim <- function(obj, method="MMLE", opt=NULL, bound=NULL){
 #' 
 #' @seealso \link{GPBayes-package}, \code{\link{GaSP}}, \linkS4class{gp}, \code{\link{gp.mcmc}}, \code{\link{gp.optim}}
 #' @export
-#' 
+#' @return a list of predictive mean, predictive standard deviation, 95% predictive intervals
 #' 
 #' @examples 
 #'
@@ -1020,7 +1021,7 @@ gp.predict <- function(obj, input.new, method="Bayes"){
 #' 
 #' @seealso \link{GPBayes-package}, \code{\link{GaSP}}, \linkS4class{gp}
 #' @export
-#' 
+#' @return a numerical vector or a matrix 
 #' @examples 
 #' 
 #' n=50
@@ -1306,7 +1307,7 @@ gp.sim <- function(formula=~1, input, param, cov.model=list(family="CH",
 #' @author Pulong Ma \email{mpulong@@gmail.com}
 #'  
 #' @export 
-#' 
+#' @return a list containing the \code{S4} object \linkS4class{gp} and prediction results 
 #' 
 #' @examples 
 #'
@@ -1489,6 +1490,7 @@ GaSP <- function(formula=~1, output, input, param, smooth.est=FALSE,
 #' @param burnin a numerical value specifying the burn-in period for calculating posterior summaries.
 #' @seealso \link{GPBayes-package}, \code{\link{GaSP}}, \code{\link{gp}}, \code{\link{gp.mcmc}}
 #' @export
+#' @return a list of posterior summaries 
 gp.get.mcmc = function(obj, burnin=500){
 
   post.stat = list()
@@ -1684,10 +1686,11 @@ gp.get.mcmc = function(obj, burnin=500){
 #'}
 #' 
 #' @author Pulong Ma \email{mpulong@@gmail.com}
-#'  
+#' 
 #' @seealso \link{GPBayes-package}, \code{\link{GaSP}}, \code{\link{gp}}, \code{\link{kernel}}, \code{\link{ikernel}},
 #' 
 #' @export 
+#' @return a numerical matrix of Fisher information
 #' @examples  
 #' n=100
 #' input = seq(0, 20, length=n)

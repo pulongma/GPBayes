@@ -188,6 +188,9 @@ This can be achieved by specifying the \strong{lower} bound in \code{opt}.}
 
 \item{verbose}{a logical value. If it is \code{TRUE}, the MCMC progress bar is shown.}
 }
+\value{
+a list containing the \code{S4} object \linkS4class{gp} and prediction results
+}
 \description{
 This function serves as a wrapper to build, fit, and make prediction 
 for a Gaussian process model. It calls on functions \code{\link{gp}}, \code{\link{gp.mcmc}},

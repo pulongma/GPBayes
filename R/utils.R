@@ -77,7 +77,7 @@
 #' 
 #' @seealso \link{GPBayes-package}, \code{\link{GaSP}}, \code{\link{kernel}}, \code{\link{ikernel}}
 #' @export
-#' 
+#' @return a numerical value of correlation parameters
 #' @examples 
 #' 
 #' range = cor.to.par(1,param=list(tail=0.5,nu=2.5), family="CH")

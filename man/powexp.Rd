@@ -13,6 +13,9 @@ powexp(d, range, nu)
 
 \item{nu}{a numerical value containing the smoothness parameter}
 }
+\value{
+a numerical matrix
+}
 \description{
 This function computes the powered-exponential correlation function given
 a distance matrix. The powered-exponential correlation function is given by

@@ -136,6 +136,7 @@ double lonAdjust(const double& lonA, const double& lonB)
 //'
 //' @author Pulong Ma \email{mpulong@@gmail.com}
 //' @seealso \code{\link{CH}}
+//' @return a numerical value
 // [[Rcpp::export]]
 double HypergU(const double& a, const double& b, const double& x){
 
@@ -169,7 +170,7 @@ double HypergU(const double& a, const double& b, const double& x){
 //'
 //' @author Pulong Ma \email{mpulong@@gmail.com}
 //' @seealso \code{\link{matern}}
-//'
+//' @return a numerical value 
 // [[Rcpp::export]]
 double BesselK(const double& nu, const double& z){
 
@@ -207,6 +208,7 @@ double digamma(const double& x){
 //' @param nu a numerical value containing the smoothness parameter
 //'
 //' @author Pulong Ma \email{mpulong@@gmail.com}
+//' @return a numerical matrix  
 //' @seealso \link{GPBayes-package}, \code{\link{GaSP}}, \linkS4class{gp}, \code{\link{matern}}, \code{\link{kernel}}, \code{\link{ikernel}}
 // [[Rcpp::export]]
 Eigen::MatrixXd CH(const Eigen::MatrixXd & d, const double & range, const double & tail, const double & nu) {
@@ -402,6 +404,7 @@ Rcpp::List deriv_ARD_CH(const Rcpp::List& d, const Eigen::VectorXd& range, const
 //' @param nu a numerical value containing the smoothness parameter
 //'
 //' @author Pulong Ma \email{mpulong@@gmail.com}
+//' @return a numerical matrix 
 //' @seealso \link{GPBayes-package}, \code{\link{GaSP}}, \linkS4class{gp}, \code{\link{CH}}, \code{\link{kernel}}, \code{\link{ikernel}}
 //'
 // [[Rcpp::export]]
@@ -614,6 +617,7 @@ return dR;
 //' @param nu a numerical value containing the smoothness parameter
 //' 
 //' @author Pulong Ma \email{mpulong@@gmail.com}
+//' @return a numerical matrix 
 //' @seealso \code{\link{kernel}}
 //'
 // [[Rcpp::export]]
@@ -737,6 +741,7 @@ return dR;
 //' @param nu a numerical value containing the smoothness parameter
 //'
 //' @author Pulong Ma \email{mpulong@@gmail.com}
+//' @return a numerical matrix 
 //' @seealso \code{\link{kernel}}
 //'
 // [[Rcpp::export]]

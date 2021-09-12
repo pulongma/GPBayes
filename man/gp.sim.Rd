@@ -115,6 +115,9 @@ where \eqn{\phi_i} denotes the range parameter along the \eqn{i}th input dimensi
 
 \item{seed}{a number specifying random number seed}
 }
+\value{
+a numerical vector or a matrix
+}
 \description{
 This function simulates realizations from Gaussian processes.
 }

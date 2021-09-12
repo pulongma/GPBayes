@@ -117,6 +117,9 @@ where \eqn{\phi_i} denotes the range parameter along the \eqn{i}th input dimensi
 \item{GCD}{Great circle distance is used for data on sphere.}
 }}
 }
+\value{
+a numerical matrix of Fisher information
+}
 \description{
 This function computes the Fisher information matrix \eqn{I(\sigma^2, \boldsymbol \theta)} for a 
 Gaussian process model. 

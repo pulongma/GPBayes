@@ -13,11 +13,3 @@ PKG_CXX17FLAGS = $(GSL_CFLAGS) $(SHLIB_OPENMP_CXXFLAGS) -DEIGEN_NO_DEBUG
 
 
 PKG_LIBS = -L$(LAPACK_LIBS) -L$(BLAS_LIBS) $(FLIBS) -L$(LIB_GSL)/lib -lgsl -lgslcblas $(SHLIB_OPENMP_CXXFLAGS)
-
-all: clean winlibs
-
-winlibs:
-	"${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" "../tools/winlibs.R"
-
-clean:
-	rm -f $(SHLIB) $(OBJECTS)

@@ -11,6 +11,9 @@ gp.get.mcmc(obj, burnin = 500)
 
 \item{burnin}{a numerical value specifying the burn-in period for calculating posterior summaries.}
 }
+\value{
+a list of posterior summaries
+}
 \description{
 This function processes posterior samples in the \code{\link{gp}} object.
 }
