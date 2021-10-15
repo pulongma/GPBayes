@@ -1,7 +1,6 @@
 Package: GPBayes
 Type: Package
-Title: Tools for Gaussian Process Modeling in Uncertainty
-        Quantification
+Title: Tools for Gaussian Process Modeling in Uncertainty Quantification
 Version: 0.1.0-2.1
 Date: 2021-09-25
 Authors@R: c(person("Pulong", "Ma", role=c("aut", "cre"), email="mpulong@gmail.com"))
@@ -14,5 +13,5 @@ Imports: Rcpp (>= 1.0.1), stats, methods
 LinkingTo: Rcpp, RcppEigen, RcppProgress
 SystemRequirements: GNU Scientific Library version >= 2.5
 NeedsCompilation: yes
-Packaged: 2021-10-08 04:24:21 UTC; mapulong
+Packaged: 2021-04-27 23:30:43 UTC; mapulong
 Author: Pulong Ma [aut, cre]
