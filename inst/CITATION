@@ -1,17 +1,16 @@
-
 NOTE<- paste( "R package version", meta$Version )
 bibentry(bibtype="Misc",
      mheader = "Please cite GPBayes including its version number  as ",
-       title = "GPBayes: Tools for Gaussian Stochastic Process Modeling with Spatial Data, Spatio-Temporal Data, and Computer Experiments",
+       title = "GPBayes: Tools for Gaussian Process Modeling in Uncertainty Quantification",
       author =
            c( 
             person("Pulong", "Ma", role = c("aut", "cre"),
                email = "mpulong@gmail.com")
-	       ),
-	       note = NOTE,
+            ),
+            note = NOTE,
  organization = "Clemson University",
       address = "Clemson, SC, USA",
          year = 2021,
-          url = "https://github.com/pulongma/GPBayes"
+          url = "https://CRAN.R-project.org/package=GPBayes"
     )
 

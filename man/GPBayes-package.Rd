@@ -6,7 +6,7 @@
   Tools for Gaussian Stochastic Process Modeling in Uncertainty Quantification
 }
 \description{
-Gaussian stochastic processes (GaSP) have been widely used to model spatial data, spatio-temporal data, and computer experiments in diverse areas of statistics including spatial statistics, spatio-temporal statistics, uncertainty quantification, and machine learning. This package creates basic tools for fitting and prediction based on GaSPs with spatial data, spatio-temporal data, and computer experiments. Key characteristics for this GP tool include: (1) the comprehensive implementation of various covariance functions including the Matérn family and the Confluent Hypergeometric family with isotropic form, tensor form, and automatic relevance determination form, where the isotropic form is widely used in spatial statistics, the tensor form is widely used in design and analysis of computer experiments and uncertainty quantification, and the automatic relevance determination form is widely used in machine learning; (2) implementations via Markov chain Monte Carlo (MCMC) algorithms and optimization algorithms for GP models with all the implemented covariance functions. The methods for fitting and prediction are mainly implemented in a Bayesian framework; (3) model evaluation via Fisher information and predictive metrics such as predictive scores; (4) built-in functionality for simulating GPs with all the implemented covariance functions; (5) unified implementation to allow easy specification of various GPs. 
+Gaussian processes (GPs) have been widely used to model spatial data, spatio-temporal data, and computer experiments in diverse areas of statistics including spatial statistics, spatio-temporal statistics, uncertainty quantification, and machine learning. This package creates basic tools for fitting and prediction based on GPs with spatial data, spatio-temporal data, and computer experiments. Key characteristics for this GP tool include: (1) the comprehensive implementation of various covariance functions including the Matérn family and the Confluent Hypergeometric family with isotropic form, tensor form, and automatic relevance determination form, where the isotropic form is widely used in spatial statistics, the tensor form is widely used in design and analysis of computer experiments and uncertainty quantification, and the automatic relevance determination form is widely used in machine learning; (2) implementations via Markov chain Monte Carlo (MCMC) algorithms and optimization algorithms for GP models with all the implemented covariance functions. The methods for fitting and prediction are mainly implemented in a Bayesian framework; (3) model evaluation via Fisher information and predictive metrics such as predictive scores; (4) built-in functionality for simulating GPs with all the implemented covariance functions; (5) unified implementation to allow easy specification of various GPs.  
 }
 \details{
 \itemize{
@@ -64,7 +64,7 @@ Pulong Ma \email{mpulong@gmail.com}
  output = Ztrue + rnorm(length(Ztrue), sd=0.1)
  df.data = data.frame(x=c(input), y=output, y.true=Ztrue)
 
- ## fitting a GaSP model with the objective Bayes approach
+ ## fitting a GaSP model with the Cauchy prior
  fit = GaSP(formula=~1, output, input, 
            param=list(range=3, nugget=0.1, nu=2.5), 
            smooth.est=FALSE, input.new=XX,
@@ -73,7 +73,7 @@ Pulong Ma \email{mpulong@gmail.com}
            dtype="Euclidean", model.fit="Cauchy_prior", nsample=3000, 
            burnin=500, verbose=TRUE)
 
- ## fitting a GaSP model with the subjective Bayes approach
+ ## fitting a GaSP model with the beta prior
  fit = GaSP(formula=~1, output, input, 
            param=list(range=3, nugget=0.1, nu=2.5), 
            smooth.est=FALSE, input.new=XX,

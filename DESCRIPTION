@@ -1,18 +1,18 @@
 Package: GPBayes
 Type: Package
-Title: Tools for Gaussian Process Modeling in Uncertainty Quantification
-Version: 0.1.0-2
-Date: 2021-08-25
+Title: Tools for Gaussian Process Modeling in Uncertainty
+        Quantification
+Version: 0.1.0-2.1
+Date: 2021-09-25
 Authors@R: c(person("Pulong", "Ma", role=c("aut", "cre"), email="mpulong@gmail.com"))
 Maintainer: Pulong Ma <mpulong@gmail.com>
 Description: Gaussian processes (GPs) have been widely used to model spatial data, spatio-temporal data, and computer experiments in diverse areas of statistics including spatial statistics, spatio-temporal statistics, uncertainty quantification, and machine learning. This package creates basic tools for fitting and prediction based on GPs with spatial data, spatio-temporal data, and computer experiments. Key characteristics for this GP tool include: (1) the comprehensive implementation of various covariance functions including the Matérn family and the Confluent Hypergeometric family with isotropic form, tensor form, and automatic relevance determination form, where the isotropic form is widely used in spatial statistics, the tensor form is widely used in design and analysis of computer experiments and uncertainty quantification, and the automatic relevance determination form is widely used in machine learning; (2) implementations via Markov chain Monte Carlo (MCMC) algorithms and optimization algorithms for GP models with all the implemented covariance functions. The methods for fitting and prediction are mainly implemented in a Bayesian framework; (3) model evaluation via Fisher information and predictive metrics such as predictive scores; (4) built-in functionality for simulating GPs with all the implemented covariance functions; (5) unified implementation to allow easy specification of various GPs. 
 License: GPL (>= 3)
 Encoding: UTF-8
-URL: https://github.com/pulongma/GPBayes/issues
+BugReports: https://github.com/pulongma/GPBayes/issues
 Imports: Rcpp (>= 1.0.1), stats, methods
 LinkingTo: Rcpp, RcppEigen, RcppProgress
 SystemRequirements: GNU Scientific Library version >= 2.5
-RoxygenNote: 7.1.1
 NeedsCompilation: yes
-Packaged: 2021-04-27 23:30:43 UTC; mapulong
+Packaged: 2021-10-08 04:24:21 UTC; mapulong
 Author: Pulong Ma [aut, cre]
