@@ -220,12 +220,22 @@ Eigen::MatrixXd CH(const Eigen::MatrixXd & d, const double & range, const double
   
   Eigen::MatrixXd covmat(n1, n2);
   covmat.setOnes();
-  double dtemp;
-  for(int i=0; i<n1; i++){
-    for(int j=0; j<n2; j++){
-      if(d(i,j)!=0.0){
-        dtemp = d(i,j) / range;
-        covmat(i, j) = con * HypergU(tail, 1.0-nu, dtemp*dtemp);
+  if(range==0.0){ // limiting case with range=0
+    for(int i=0; i<n1; i++){
+      for(int j=0; j<n2; j++){
+        if(d(i,j)!=0.0){
+          covmat(i,j)=0.0;
+        }
+      }
+    }
+  }else{
+    double dtemp;
+    for(int i=0; i<n1; i++){
+      for(int j=0; j<n2; j++){
+        if(d(i,j)!=0.0){
+          dtemp = d(i,j) / range;
+          covmat(i, j) = con * HypergU(tail, 1.0-nu, dtemp*dtemp);
+        }
       }
     }
   }
@@ -417,35 +427,46 @@ Eigen::MatrixXd matern(const Eigen::MatrixXd& d, const double & range, const dou
 
   double dtemp, con1; 
 
-  if(nu==0.5){
+  if(range==0.0){ // limiting case with range=0
+    covmat.setOnes();
     for(int i=0; i<n1; i++){
       for(int j=0; j<n2; j++){
-        covmat(i,j) = exp(-d(i,j)/range);
+        if(d(i,j)!=0.0){
+          covmat(i,j)=0.0;
+        }
       }
-    }
-  }else if(nu==1.5){
-    for(int i=0; i<n1; i++){
-      for(int j=0; j<n2; j++){
-        dtemp =  d(i,j)/range;
-        covmat(i,j) = (1.0+dtemp) * exp(-dtemp);
-      }
-    }
-  }else if(nu==2.5){
-    for(int i=0; i<n1; i++){
-      for(int j=0; j<n2; j++){
-        dtemp =  d(i,j)/range;
-        covmat(i,j) = (1.0 + dtemp + dtemp*dtemp/3.0) * exp(-dtemp);
-      }
-    }
+    }    
   }else{
-    con1 = pow(2.0, 1.0-nu);
-    for(int i=0; i<n1; i++){
-      for(int j=0; j<n2; j++){
-        if(d(i,j)==0.0){
-          covmat(i,j) = 1.0;
-        }else{
-          tau = d(i,j)/range;
-          covmat(i,j) = (con1 / tgamma(nu)) * pow(tau, nu) * BesselK(nu, tau);          
+    if(nu==0.5){
+      for(int i=0; i<n1; i++){
+        for(int j=0; j<n2; j++){
+          covmat(i,j) = exp(-d(i,j)/range);
+        }
+      }
+    }else if(nu==1.5){
+      for(int i=0; i<n1; i++){
+        for(int j=0; j<n2; j++){
+          dtemp =  d(i,j)/range;
+          covmat(i,j) = (1.0+dtemp) * exp(-dtemp);
+        }
+      }
+    }else if(nu==2.5){
+      for(int i=0; i<n1; i++){
+        for(int j=0; j<n2; j++){
+          dtemp =  d(i,j)/range;
+          covmat(i,j) = (1.0 + dtemp + dtemp*dtemp/3.0) * exp(-dtemp);
+        }
+      }
+    }else{
+      con1 = pow(2.0, 1.0-nu);
+      for(int i=0; i<n1; i++){
+        for(int j=0; j<n2; j++){
+          if(d(i,j)==0.0){
+            covmat(i,j) = 1.0;
+          }else{
+            tau = d(i,j)/range;
+            covmat(i,j) = (con1 / tgamma(nu)) * pow(tau, nu) * BesselK(nu, tau);          
+          }
         }
       }
     }

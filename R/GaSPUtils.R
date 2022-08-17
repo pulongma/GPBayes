@@ -1559,7 +1559,7 @@ gp.get.mcmc = function(obj, burnin=500){
 #' @description This function computes the Fisher information matrix \eqn{I(\sigma^2, \boldsymbol \theta)} for a 
 #' Gaussian process model. 
 #' The standard likelihood is defined as 
-#' \deqn{ L(\sigma^2, \boldsymbol \theta; \mathbf{y}) = \mathcal{N}_n(\mathbf{H}\mathbf{b}, \sigma^2 \mathbf{R}),
+#' \deqn{ L(\mathbf{b}, \sigma^2, \boldsymbol \theta; \mathbf{y}) = \mathcal{N}_n(\mathbf{H}\mathbf{b}, \sigma^2 \mathbf{R}),
 #' }
 #' where \eqn{\mathbf{y}:=(y(\mathbf{x}_1), \ldots, y(\mathbf{x}_n))^\top} is a vector of \eqn{n} observations.
 #' \eqn{\mathbf{H}} is a matrix of covariates, \eqn{\mathbf{b}} is a vector of regression coefficients, 
@@ -1862,7 +1862,7 @@ gp.fisher <- function(obj=NULL, intloglik=FALSE, formula=~1, input=NULL, param=N
 #'\itemize{
 #' \item{The effective number of parameters (see p.172 of Gelman et al. 2013) is defined as
 #' \deqn{
-#'  pD = E_{\boldsymbol \theta| \mathbf{y}}[D(\boldsymbol \theta)] - D(\boldsymbol \hat{\theta}),
+#'  pD = E_{\boldsymbol \theta| \mathbf{y}}[D(\boldsymbol \theta)] - D(\hat{ \boldsymbol \theta }),
 #'  }
 #' where \eqn{\hat{\boldsymbol \theta} = E_{\boldsymbol \theta | \mathbf{y}}[\boldsymbol \theta]. }
 #' The interpretation is that the effective number of parameters is the ``expected" 
