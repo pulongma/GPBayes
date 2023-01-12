@@ -1,15 +1,15 @@
 
-## With R 3.1.0 or later, you can uncomment the following line to tell R to 
-## enable compilation with C++11 (where available)
+## With R 4.1.0 or later, you can uncomment the following line to tell R to 
+## enable compilation with C++14 (where available)
 ##
-CXX_STD = CXX11
+#CXX_STD = CXX14
 
-#PKG_CPPFLAGS =  -I$(LIB_GSL)/include $(SHLIB_OPENMP_CPPFLAGS) 
+PKG_CPPFLAGS = -I$(LIB_GSL)/include  
 
 PKG_CXXFLAGS = $(SHLIB_OPENMP_CXXFLAGS) -DEIGEN_NO_DEBUG -I$(LIB_GSL)/include 
-PKG_CXX11FLAGS = $(GSL_CFLAGS) $(SHLIB_OPENMP_CXXFLAGS) -DEIGEN_NO_DEBUG 
-PKG_CXX14FLAGS = $(GSL_CFLAGS) $(SHLIB_OPENMP_CXXFLAGS) -DEIGEN_NO_DEBUG 
-PKG_CXX17FLAGS = $(GSL_CFLAGS) $(SHLIB_OPENMP_CXXFLAGS) -DEIGEN_NO_DEBUG 
+#PKG_CXX11FLAGS = $(GSL_CFLAGS) $(SHLIB_OPENMP_CXXFLAGS) -DEIGEN_NO_DEBUG 
+#PKG_CXX14FLAGS = $(GSL_CFLAGS) $(SHLIB_OPENMP_CXXFLAGS) -DEIGEN_NO_DEBUG 
+#PKG_CXX17FLAGS = $(GSL_CFLAGS) $(SHLIB_OPENMP_CXXFLAGS) -DEIGEN_NO_DEBUG 
 
 
 PKG_LIBS = -L$(LAPACK_LIBS) -L$(BLAS_LIBS) $(FLIBS) -L$(LIB_GSL)/lib -lgsl -lgslcblas $(SHLIB_OPENMP_CXXFLAGS)
