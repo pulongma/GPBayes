@@ -3,7 +3,7 @@
 \newcommand{\ghpr}{\href{https://github.com/pulongma/GPBayes/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/pulongma/GPBayes/issues/#1}{##1}}
 
-\section{Changes in GPBayes version 0.1.0-5 (2022-1-12)}{
+\section{Changes in GPBayes version 0.1.0-5 (2023-1-12)}{
 	\itemize{
 		\item Fixed the issue in the configure file.  
 	}
