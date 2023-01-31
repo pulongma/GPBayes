@@ -2,7 +2,7 @@
 ## With R 4.1.0 or later, you can uncomment the following line to tell R to 
 ## enable compilation with C++14 (where available)
 ##
-#CXX_STD = CXX14
+CXX_STD = CXX17
 
 PKG_CPPFLAGS = -I$(LIB_GSL)/include  
 
