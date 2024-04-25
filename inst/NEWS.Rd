@@ -3,6 +3,19 @@
 \newcommand{\ghpr}{\href{https://github.com/pulongma/GPBayes/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/pulongma/GPBayes/issues/#1}{##1}}
 
+\section{Changes in GPBayes version 0.1.0-6 (2024-4-24)}{
+	\itemize{
+		\item Added checks for the arguments in \link{gp.mcmc} when a ARD type of covariances is specified.
+		\item Added the function \link{gp.condsim} to perform conditional simulation. 
+	}
+}
+
+\section{Changes in GPBayes version 0.1.0-5.1 (2023-1-31)}{
+	\itemize{
+		\item Updated C++ specification to C++17 to please CRAN.  
+	}
+}
+
 \section{Changes in GPBayes version 0.1.0-5 (2023-1-12)}{
 	\itemize{
 		\item Fixed the issue in the configure file.  

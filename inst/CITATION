@@ -8,9 +8,9 @@ bibentry(bibtype="Misc",
                email = "mpulong@gmail.com")
             ),
             note = NOTE,
- organization = "Clemson University",
-      address = "Clemson, SC, USA",
-         year = 2021,
+ organization = "Iowa State University",
+      address = "Ames, IA, USA",
+         year = 2023,
           url = "https://CRAN.R-project.org/package=GPBayes"
     )
 
