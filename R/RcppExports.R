@@ -31,7 +31,7 @@ BesselK <- function(nu, z) {
     .Call(`_GPBayes_BesselK`, nu, z)
 }
 
-#' @title The Confluent Hypergeometric correlation function proposed by Ma and Bhadra (2019)
+#' @title The Confluent Hypergeometric correlation function proposed by Ma and Bhadra (2023)
 #'
 #' @description This function computes the Confluent Hypergeometric correlation function given
 #' a distance matrix. The Confluent Hypergeometric correlation function is given by 
@@ -39,8 +39,9 @@ BesselK <- function(nu, z) {
 #' \mathcal{U}\left(\alpha, 1-\nu,  \biggr(\frac{h}{\beta}\biggr)^2 \right),}
 #' where \eqn{\alpha} is the tail decay parameter. \eqn{\beta} is the range parameter.
 #' \eqn{\nu} is the smoothness parameter. \eqn{\mathcal{U}(\cdot)} is the confluent hypergeometric
-#' function of the second kind. For details about this covariance, 
-#' see Ma and Bhadra (2019) at \url{https://arxiv.org/abs/1911.05865}.  
+#' function of the second kind. Note that this parameterization of the CH covariance
+#' is different from the one in Ma and Bhadra (2023). For details about this covariance, 
+#' see Ma and Bhadra (2023; \doi{10.1080/01621459.2022.2027775}).  
 #' 
 #' @param d a matrix of distances
 #' @param range a numerical value containing the range parameter 
@@ -185,7 +186,7 @@ cauchy <- function(d, range, tail, nu) {
 #' where \eqn{\alpha} is the tail decay parameter. \eqn{\beta} is the range parameter.
 #' \eqn{\nu} is the smoothness parameter. \eqn{\mathcal{U}(\cdot)} is the confluent hypergeometric
 #' function of the second kind. For details about this covariance, 
-#' see Ma and Bhadra (2019) at \url{https://arxiv.org/abs/1911.05865}.  
+#' see Ma and Bhadra (2023; \doi{10.1080/01621459.2022.2027775}).  
 #' }
 #' \item{cauchy}{The generalized Cauchy covariance is given by
 #' \deqn{C(h) = \left\{ 1 + \left( \frac{h}{\phi} \right)^{\nu}  
@@ -271,7 +272,7 @@ NULL
 #' where \eqn{\alpha} is the tail decay parameter. \eqn{\beta} is the range parameter.
 #' \eqn{\nu} is the smoothness parameter. \eqn{\mathcal{U}(\cdot)} is the confluent hypergeometric
 #' function of the second kind. For details about this covariance, 
-#' see Ma and Bhadra (2019) at \url{https://arxiv.org/abs/1911.05865}.  
+#' see Ma and Bhadra (2023; \doi{10.1080/01621459.2022.2027775}).  
 #' }
 #' \item{cauchy}{The generalized Cauchy covariance is given by
 #' \deqn{C(h) = \left\{ 1 + \left( \frac{h}{\phi} \right)^{\nu}  
@@ -417,7 +418,7 @@ ikernel <- function(input1, input2, range, tail, nu, covmodel, dtype = "Euclidea
 #' where \eqn{\alpha} is the tail decay parameter. \eqn{\beta} is the range parameter.
 #' \eqn{\nu} is the smoothness parameter. \eqn{\mathcal{U}(\cdot)} is the confluent hypergeometric
 #' function of the second kind. For details about this covariance, 
-#' see Ma and Bhadra (2019) at \url{https://arxiv.org/abs/1911.05865}.  
+#' see Ma and Bhadra (2023; \doi{10.1080/01621459.2022.2027775}).  
 #' }
 #' \item{cauchy}{The generalized Cauchy covariance is given by
 #' \deqn{C(h) = \left\{ 1 + \left( \frac{h}{\phi} \right)^{\nu}  
@@ -503,7 +504,7 @@ kernel <- function(d, range, tail, nu, covmodel) {
 #' where \eqn{\alpha} is the tail decay parameter. \eqn{\beta} is the range parameter.
 #' \eqn{\nu} is the smoothness parameter. \eqn{\mathcal{U}(\cdot)} is the confluent hypergeometric
 #' function of the second kind. For details about this covariance, 
-#' see Ma and Bhadra (2019) at \url{https://arxiv.org/abs/1911.05865}.  
+#' see Ma and Bhadra (2023; \doi{10.1080/01621459.2022.2027775}).  
 #' }
 #' \item{cauchy}{The generalized Cauchy covariance is given by
 #' \deqn{C(h) = \left\{ 1 + \left( \frac{h}{\phi} \right)^{\nu}  
@@ -591,6 +592,10 @@ GPpredict <- function(output, H, input, input_new, Hnew, par, covmodel, dtype) {
 
 post_predictive_sampling <- function(output, H, input, input_new, Hnew, MCMCsample, smooth, smoothness_est, covmodel, dtype) {
     .Call(`_GPBayes_post_predictive_sampling`, output, H, input, input_new, Hnew, MCMCsample, smooth, smoothness_est, covmodel, dtype)
+}
+
+condsim <- function(output, H, input, input_new, Hnew, par, covmodel, dtype, nsample) {
+    .Call(`_GPBayes_condsim`, output, H, input, input_new, Hnew, par, covmodel, dtype, nsample)
 }
 
 MCMCOBayes <- function(output, H, input, par, covmodel, smoothness_est, proposal, nsample, dtype, verbose = TRUE) {

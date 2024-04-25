@@ -498,12 +498,24 @@ gp.mcmc <- function(obj, input.new=NULL, method="Cauchy_prior", prior=list(), pr
 
     if(!exists("range", where=proposal_new)){
       proposal_new$range = rep(0.1, Dim)
+    }else{
+      if(length(proposal_new$range)!=Dim){
+        stop("Specify a numerical vector with correct dimension in the proposal variance for range.\n")
+      }
     }
     if(!exists("tail", where=proposal_new)){
       proposal_new$tail = rep(0.1, Dim)
+    }else{
+      if(length(proposal_new$tail)!=Dim){
+        stop("Specify a numerical vector with correct dimension in the proposal variance for tail\n")
+      }
     }
     if(!exists("nu", where=proposal_new)){
       proposal_new$nu = rep(0.1, Dim)
+    }else{
+      if(length(proposal_new$nu)!=Dim){
+        stop("Specify a numerical vector with correct dimension in the proposal variance for nu\n")
+      }
     }
     if(!exists("nugget", where=proposal_new)){
       proposal_new$nugget = 0.1
@@ -513,12 +525,24 @@ gp.mcmc <- function(obj, input.new=NULL, method="Cauchy_prior", prior=list(), pr
 
     if(!exists("range", where=proposal_new)){
       proposal_new$range = rep(0.1, Dim)
+    }else{
+      if(length(proposal_new$range)!=Dim){
+        stop("Specify a numerical vector with correct dimension in the proposal variance for range.\n")
+      }
     }
     if(!exists("tail", where=proposal_new)){
       proposal_new$tail = 0.1
+    }else{
+      if(length(proposal_new$tail)!=1){
+        stop("Specify a numerical value in the proposal variance for tail.\n")
+      }
     }
     if(!exists("nu", where=proposal_new)){
       proposal_new$nu = 0.1
+    }else{
+      if(length(proposal_new$nu)!=1){
+        stop("Specify a numerical value in the propoal variance for nu.\n")
+      }
     }
     if(!exists("nugget", where=proposal_new)){
       proposal_new$nugget = 0.1
@@ -787,7 +811,7 @@ gp.optim <- function(obj, method="MMLE", opt=NULL, bound=NULL){
 #' 
 #' @seealso \link{GPBayes-package}, \code{\link{GaSP}}, \linkS4class{gp}, \code{\link{gp.mcmc}}, \code{\link{gp.optim}}
 #' @export
-#' @return a list of predictive mean, predictive standard deviation, 95% predictive intervals
+#' @return a list of predictive mean, predictive standard deviation, 95\% predictive intervals
 #' 
 #' @examples 
 #'
@@ -1205,7 +1229,7 @@ gp.sim <- function(formula=~1, input, param, cov.model=list(family="CH",
 #'
 #' @param seed random generation seed default to be \code{NULL}. 
 #' 
-#' @return a matrix of conditional simulations
+#' @return an array (vector or matrix) of conditional simulations
 #'
 #' @export
 #'  
@@ -1217,7 +1241,7 @@ gp.condsim = function(obj, XX, nsample=1, seed=NULL){
   }
 
   if(!is.matrix(XX)){
-    message("Converting XX to a matrix...\n")
+    #message("Converting XX to a matrix...\n")
     XX = as.matrix(XX)
   }
 
@@ -1660,15 +1684,20 @@ gp.get.mcmc = function(obj, burnin=500){
 ##########################################################################################
 #' @title Fisher information matrix 
 #' @description This function computes the Fisher information matrix \eqn{I(\sigma^2, \boldsymbol \theta)} for a 
-#' Gaussian process model. 
-#' The standard likelihood is defined as 
-#' \deqn{ L(\mathbf{b}, \sigma^2, \boldsymbol \theta; \mathbf{y}) = \mathcal{N}_n(\mathbf{H}\mathbf{b}, \sigma^2 \mathbf{R}),
+#' Gaussian process model \eqn{y(\cdot) \sim \mathcal{GP}(h^\top(\mathbf{x})\mathbf{b}, \sigma^2 c(\cdot, \cdot) )}, where
+#' \eqn{c(\mathbf{x}_1, \mathbf{x}_2) = r(\mathbf{x}_1, \mathbf{x}_2) + \tau^2\mathbf{1}(\mathbf{x}_1=\mathbf{x}_2) } with correlation function
+#' \eqn{r(\cdot, \cdot)} and nugget parameter \eqn{\tau^2}; \eqn{\mathbf{b}} is a vector of regression coefficients, 
+#' \eqn{\sigma^2} is the variance parameter (or partial sill). 
+#'
+#'
+#' Given \eqn{n} data points that are assumed to be realizations from the GP model,    
+#' the standard likelihood is defined as 
+#' \deqn{ L(\mathbf{b}, \sigma^2, \boldsymbol \theta; \mathbf{y}) = \mathcal{N}_n(\mathbf{H}\mathbf{b}, \sigma^2 (\mathbf{R} + \tau^2\mathbf{I}) ),
 #' }
 #' where \eqn{\mathbf{y}:=(y(\mathbf{x}_1), \ldots, y(\mathbf{x}_n))^\top} is a vector of \eqn{n} observations.
-#' \eqn{\mathbf{H}} is a matrix of covariates, \eqn{\mathbf{b}} is a vector of regression coefficients, 
-#' \eqn{\sigma^2} is the variance parameter, \eqn{\boldsymbol \theta} contains correlation
-#' parameters and nugget parameter, \eqn{\mathbf{R}} denotes the correlation matrix 
-#' plus nugget variance on the main diagonal.
+#' \eqn{\mathbf{H}} is a matrix of covariates, \eqn{\boldsymbol \theta} contains correlation
+#' parameters and nugget parameter, \eqn{\mathbf{R}} denotes the \eqn{n}-by-\eqn{n} correlation matrix. 
+#' 
 #' 
 #' The integrated likelihood is defined as
 #' \deqn{
@@ -2006,7 +2035,7 @@ gp.fisher <- function(obj=NULL, intloglik=FALSE, formula=~1, input=NULL, param=N
 #' @author Pulong Ma \email{mpulong@@gmail.com}
 #'  
 #' @seealso \link{GPBayes-package}, \code{\link{GaSP}}, \code{\link{gp}}, 
-#' @return a list containingg \strong{pD}, \strong{DIC}, \strong{lppd}, \strong{ljpd}.
+#' @return a list containing \strong{pD}, \strong{DIC}, \strong{lppd}, \strong{ljpd}.
 #' @export 
 #' @references 
 #' \itemize{
