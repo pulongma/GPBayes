@@ -118,6 +118,17 @@ class UQ
       const Eigen::MatrixXd& range, const Eigen::VectorXd& tail, const Eigen::VectorXd& nu, 
       const Eigen::VectorXd& nugget, const Rcpp::List& covmodel);
 
+    // conditional simulation
+    Rcpp::List tensor_condsim(const Eigen::MatrixXd& output, const Eigen::MatrixXd& H, 
+      const Eigen::MatrixXd& input, const Eigen::MatrixXd& input_new, const Eigen::MatrixXd& Hnew, 
+      const Eigen::VectorXd& range, const Eigen::VectorXd& tail, const Eigen::VectorXd& nu, 
+      const double& nugget, const Rcpp::List& covmodel, int nsample);
+
+    Rcpp::List ARD_condsim(const Eigen::MatrixXd& output, const Eigen::MatrixXd& H, 
+      const Eigen::MatrixXd& input, const Eigen::MatrixXd& input_new, const Eigen::MatrixXd& Hnew, 
+      const Eigen::VectorXd& range, const double& tail, const double& nu, 
+      const double& nugget, const Rcpp::List& covmodel, int nsample);
+
     // MCMC algorithm
     // LogNormal on constrained parameter space
     // Rcpp::List tensor_MCMC_LN(const Eigen::MatrixXd& output, const Eigen::MatrixXd& H, const Eigen::MatrixXd& input, const Rcpp::List& par_curr, Rcpp::List& covmodel, 
@@ -1726,6 +1737,216 @@ Rcpp::List UQ::ARD_simulate_predictive_dist(const Eigen::MatrixXd& output, const
 
 /*****************************************************************************************/
 /*****************************************************************************************/
+// Conditional simulation
+Rcpp::List UQ::tensor_condsim(const Eigen::MatrixXd& output, const Eigen::MatrixXd& H, 
+  const Eigen::MatrixXd& input, const Eigen::MatrixXd& input_new, const Eigen::MatrixXd& Hnew, 
+  const Eigen::VectorXd& range, const Eigen::VectorXd& tail, const Eigen::VectorXd& nu, 
+  const double& nugget, const Rcpp::List& covmodel, int nsample){
+
+  int n = output.rows();
+  int q = output.cols();
+  int m = input_new.rows();
+  int p = H.cols();
+
+  int dim = input.cols();
+  Eigen::MatrixXd R(n,n), RInv(n,n), RH(n,p), HRH(p,p), Rnew(n,m), HRHInv(p,p);
+  Eigen::MatrixXd res(n,q), Ry(n,q), bhat(p,q);
+  Eigen::LDLT<Eigen::MatrixXd> ldltR, ldltH, ldlt;
+
+  double df = n-p;
+  Rcpp::List d(dim), d0(dim);
+
+  Eigen::MatrixXd sig2hat(q,q), predmean(m, q), L(q,q);
+
+  Eigen::MatrixXd ysim(m,q); 
+
+  d = UQ::adist(input, input);
+  d0 = UQ::adist(input, input_new);
+
+  std::string family = Rcpp::as<std::string>(covmodel["family"]);
+  std::string form = Rcpp::as<std::string>(covmodel["form"]);
+
+  Eigen::VectorXd Rtmp(n), tmp(p), pred_corr(m);
+
+  Rcpp::List ysim_sample(nsample);
+
+#ifdef USE_R
+    GetRNGstate();
+#endif
+
+
+
+    R = UQ::tensor_kernel(d, range, tail, nu, family);
+    Rnew = UQ::tensor_kernel(d0, range, tail, nu, family);
+
+    R.diagonal().array() += nugget;
+    for(int i=0; i<n; i++){
+      for(int j=0; j<m; j++){
+        if(Rnew(i,j)==1.0){
+          Rnew(i,j) += nugget;
+        }
+      }
+    }
+
+    ldltR.compute(R);
+    RInv = ldltR.solve(Eigen::MatrixXd::Identity(n,n));
+    RH = RInv * H;
+    HRH = H.transpose() * RH;
+    ldltH.compute(HRH);
+    Ry = RInv*output;
+
+    bhat = ldltH.solve(H.transpose()*Ry);
+    res = output - H*bhat;
+    // Rnew = UQ::kernel(d0, par, covmodel);
+    predmean = Hnew*bhat;
+    predmean += Rnew.transpose()*(RInv*res);
+    sig2hat = res.transpose() * RInv*res / df;
+
+    HRHInv = ldltH.solve(Eigen::MatrixXd::Identity(p,p));
+
+    
+    for(int k=0; k<m; k++){
+      Rtmp = Rnew.col(k);
+      tmp = Hnew.row(k) - RH.transpose()*Rtmp;
+      pred_corr(k) = R(0,0) - Rtmp.dot(RInv*Rtmp) + tmp.dot(HRHInv*tmp);
+    }
+
+    // simulate from posterior predictive distribution
+    L = sig2hat.llt().matrixL();
+
+  // Progress prog(nsample, true);
+  for(int it=0; it<nsample; it++){
+    // if(Progress::check_abort()){
+    //   return R_NilValue;
+    // }
+    // prog.increment();
+
+    for(int k=0; k<m; k++){
+      ysim.row(k) =  sqrt(pred_corr(k)) * L * Rcpp::as<Eigen::VectorXd>(Rcpp::rnorm(q, 0.0, 1.0))
+                  / sqrt(Rcpp::as<double>(Rcpp::rchisq(1, df)) / df);
+    }
+    ysim += predmean;
+
+    ysim_sample[it] = ysim;
+  }
+
+
+  
+#ifdef USE_R
+  PutRNGstate();
+#endif 
+
+
+  return ysim_sample; 
+
+
+}
+
+
+Rcpp::List UQ::ARD_condsim(const Eigen::MatrixXd& output, const Eigen::MatrixXd& H, 
+  const Eigen::MatrixXd& input, const Eigen::MatrixXd& input_new, const Eigen::MatrixXd& Hnew, 
+  const Eigen::VectorXd& range, const double& tail, const double& nu, 
+  const double& nugget, const Rcpp::List& covmodel, int nsample){
+
+  int n = output.rows();
+  int q = output.cols();
+  int m = input_new.rows();
+  int p = H.cols();
+
+  int dim = input.cols();
+  Eigen::MatrixXd R(n,n), RInv(n,n), RH(n,p), HRH(p,p), Rnew(n,m), HRHInv(p,p);
+  Eigen::MatrixXd res(n,q), Ry(n,q), bhat(p,q);
+  Eigen::LDLT<Eigen::MatrixXd> ldltR, ldltH, ldlt;
+
+  double df = n-p;
+  Rcpp::List d(dim), d0(dim);
+
+  Eigen::MatrixXd sig2hat(q,q), predmean(m, q), L(q,q);
+
+  Eigen::MatrixXd ysim(m,q); 
+
+  d = UQ::adist(input, input);
+  d0 = UQ::adist(input, input_new);
+
+  std::string family = Rcpp::as<std::string>(covmodel["family"]);
+  std::string form = Rcpp::as<std::string>(covmodel["form"]);
+
+  Eigen::VectorXd Rtmp(n), tmp(p), pred_corr(m);
+
+  Rcpp::List ysim_sample(nsample);
+
+#ifdef USE_R
+    GetRNGstate();
+#endif
+
+
+
+    R = UQ::ARD_kernel(d, range, tail, nu, family);
+    Rnew = UQ::ARD_kernel(d0, range, tail, nu, family);
+
+    R.diagonal().array() += nugget;
+
+    for(int i=0; i<n; i++){
+      for(int j=0; j<m; j++){
+        if(Rnew(i,j)==1.0){
+          Rnew(i,j) += nugget;
+        }
+      }
+    }
+
+    ldltR.compute(R);
+    RInv = ldltR.solve(Eigen::MatrixXd::Identity(n,n));
+    RH = RInv * H;
+    HRH = H.transpose() * RH;
+    ldltH.compute(HRH);
+    Ry = RInv*output;
+
+    bhat = ldltH.solve(H.transpose()*Ry);
+    res = output - H*bhat;
+    // Rnew = UQ::kernel(d0, par, covmodel);
+    predmean = Hnew*bhat;
+    predmean += Rnew.transpose()*(RInv*res);
+    sig2hat = res.transpose() * RInv*res / df;
+
+    HRHInv = ldltH.solve(Eigen::MatrixXd::Identity(p,p));
+
+    
+    for(int k=0; k<m; k++){
+      Rtmp = Rnew.col(k);
+      tmp = Hnew.row(k) - RH.transpose()*Rtmp;
+      pred_corr(k) = R(0,0) - Rtmp.dot(RInv*Rtmp) + tmp.dot(HRHInv*tmp);
+    }
+
+    // simulate from posterior predictive distribution
+    L = sig2hat.llt().matrixL();
+
+  // Progress prog(nsample, true);
+  for(int it=0; it<nsample; it++){
+    // if(Progress::check_abort()){
+    //   return R_NilValue;
+    // }
+    // prog.increment();
+
+    for(int k=0; k<m; k++){
+      ysim.row(k) =  sqrt(pred_corr(k)) * L * Rcpp::as<Eigen::VectorXd>(Rcpp::rnorm(q, 0.0, 1.0))
+                  / sqrt(Rcpp::as<double>(Rcpp::rchisq(1, df)) / df);
+    }
+    ysim += predmean;
+
+    ysim_sample[it] = ysim;
+  }
+
+
+  
+#ifdef USE_R
+  PutRNGstate();
+#endif 
+
+
+  return ysim_sample; 
+
+
+}
 
 
 /*****************************************************************************************/
@@ -1736,7 +1957,6 @@ Rcpp::List UQ::ARD_MCMCOBayes(const Eigen::MatrixXd& output, const Eigen::Matrix
   const Eigen::MatrixXd& input, const Eigen::VectorXd& range, const Eigen::VectorXd& tail, 
   const Eigen::VectorXd& nu, const double& nugget, const Rcpp::List& covmodel, 
   const bool& smoothness_est, const Rcpp::List& proposal, const int& nsample, const bool& verbose){
-
 
   std::string family = Rcpp::as<std::string>(covmodel["family"]);
   std::string form = Rcpp::as<std::string>(covmodel["form"]);
@@ -1751,7 +1971,7 @@ Rcpp::List UQ::ARD_MCMCOBayes(const Eigen::MatrixXd& output, const Eigen::Matrix
     Delta_range = 0.1*Eigen::VectorXd::Ones(Dim);
   }
   double Delta_tail=0.1, Delta_nugget=0.1, Delta_nu=0.1; // sd in the LN proposal distribution.
-
+  
   if(proposal.containsElementNamed("tail")){
     Delta_tail = Rcpp::as<double>(proposal["tail"]);
   }else{
@@ -1984,7 +2204,7 @@ Rcpp::List UQ::ARD_MCMCOBayes(const Eigen::MatrixXd& output, const Eigen::Matrix
 
       // update range parameter 
       for(int k=0; k<Dim; k++){
-
+        range_prop = range_curr;
         // generate proposal
         range_prop(k) = exp(Rcpp::rnorm(1, log(range_curr(k)), Delta_range(k))[0]);
         loglik_prop = UQ::MLoglik(range_prop, tail_curr, nu_curr, nugget_curr, output, H, d, covmodel);

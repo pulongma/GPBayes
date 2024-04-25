@@ -64,6 +64,13 @@ class SP
       const Eigen::VectorXd& range, const Eigen::VectorXd& tail, const Eigen::VectorXd& nu, 
       const Eigen::VectorXd& nugget, const Rcpp::List& covmodel, const std::string& dtype);
 
+    // Conditional Simulation
+    Rcpp::List condsim(const Eigen::MatrixXd& y, 
+      const Eigen::MatrixXd& H, const Eigen::MatrixXd& input,
+      const Eigen::MatrixXd& input_new, const Eigen::MatrixXd& Hnew, 
+      const double& range, const double& tail, const double& nu, 
+      const double& nugget, const Rcpp::List& covmodel, const std::string& dtype, int nsample);
+
     // MCMC algorithm
     Rcpp::List iso_MCMCOBayes(const Eigen::MatrixXd& output, const Eigen::MatrixXd& H, 
       const Eigen::MatrixXd& input, const double& range, const double& tail, 

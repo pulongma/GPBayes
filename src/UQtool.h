@@ -85,6 +85,17 @@ class UQ
       const Eigen::MatrixXd& range, const Eigen::VectorXd& tail, const Eigen::VectorXd& nu, 
       const Eigen::VectorXd& nugget, const Rcpp::List& covmodel);
 
+    // conditional simulation
+    Rcpp::List tensor_condsim(const Eigen::MatrixXd& output, const Eigen::MatrixXd& H, 
+      const Eigen::MatrixXd& input, const Eigen::MatrixXd& input_new, const Eigen::MatrixXd& Hnew, 
+      const Eigen::VectorXd& range, const Eigen::VectorXd& tail, const Eigen::VectorXd& nu, 
+      const double& nugget, const Rcpp::List& covmodel, int nsample);
+
+    Rcpp::List ARD_condsim(const Eigen::MatrixXd& output, const Eigen::MatrixXd& H, 
+      const Eigen::MatrixXd& input, const Eigen::MatrixXd& input_new, const Eigen::MatrixXd& Hnew, 
+      const Eigen::VectorXd& range, const double& tail, const double& nu, 
+      const double& nugget, const Rcpp::List& covmodel, int nsample);
+
     // MCMC algorithm
     // LogNormal on constrained parameter space
     // Rcpp::List tensor_MCMC_LN(const Eigen::MatrixXd& output, const Eigen::MatrixXd& H, const Eigen::MatrixXd& input, const Rcpp::List& par_curr, Rcpp::List& covmodel, 

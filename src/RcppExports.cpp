@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // HypergU
 double HypergU(const double& a, const double& b, const double& x);
 RcppExport SEXP _GPBayes_HypergU(SEXP aSEXP, SEXP bSEXP, SEXP xSEXP) {
@@ -465,6 +470,25 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// condsim
+Rcpp::List condsim(Eigen::Map<Eigen::MatrixXd> output, Eigen::Map<Eigen::MatrixXd> H, Eigen::Map<Eigen::MatrixXd> input, Eigen::Map<Eigen::MatrixXd> input_new, Eigen::Map<Eigen::MatrixXd> Hnew, const Rcpp::List& par, const Rcpp::List& covmodel, const std::string& dtype, int nsample);
+RcppExport SEXP _GPBayes_condsim(SEXP outputSEXP, SEXP HSEXP, SEXP inputSEXP, SEXP input_newSEXP, SEXP HnewSEXP, SEXP parSEXP, SEXP covmodelSEXP, SEXP dtypeSEXP, SEXP nsampleSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Eigen::Map<Eigen::MatrixXd> >::type output(outputSEXP);
+    Rcpp::traits::input_parameter< Eigen::Map<Eigen::MatrixXd> >::type H(HSEXP);
+    Rcpp::traits::input_parameter< Eigen::Map<Eigen::MatrixXd> >::type input(inputSEXP);
+    Rcpp::traits::input_parameter< Eigen::Map<Eigen::MatrixXd> >::type input_new(input_newSEXP);
+    Rcpp::traits::input_parameter< Eigen::Map<Eigen::MatrixXd> >::type Hnew(HnewSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List& >::type par(parSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List& >::type covmodel(covmodelSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type dtype(dtypeSEXP);
+    Rcpp::traits::input_parameter< int >::type nsample(nsampleSEXP);
+    rcpp_result_gen = Rcpp::wrap(condsim(output, H, input, input_new, Hnew, par, covmodel, dtype, nsample));
+    return rcpp_result_gen;
+END_RCPP
+}
 // MCMCOBayes
 Rcpp::List MCMCOBayes(Eigen::Map<Eigen::MatrixXd> output, Eigen::Map<Eigen::MatrixXd> H, Eigen::Map<Eigen::MatrixXd> input, const Rcpp::List& par, const Rcpp::List& covmodel, const bool& smoothness_est, const Rcpp::List& proposal, const int& nsample, const std::string& dtype, bool verbose);
 RcppExport SEXP _GPBayes_MCMCOBayes(SEXP outputSEXP, SEXP HSEXP, SEXP inputSEXP, SEXP parSEXP, SEXP covmodelSEXP, SEXP smoothness_estSEXP, SEXP proposalSEXP, SEXP nsampleSEXP, SEXP dtypeSEXP, SEXP verboseSEXP) {
@@ -704,6 +728,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_GPBayes_GPsim", (DL_FUNC) &_GPBayes_GPsim, 6},
     {"_GPBayes_GPpredict", (DL_FUNC) &_GPBayes_GPpredict, 8},
     {"_GPBayes_post_predictive_sampling", (DL_FUNC) &_GPBayes_post_predictive_sampling, 10},
+    {"_GPBayes_condsim", (DL_FUNC) &_GPBayes_condsim, 9},
     {"_GPBayes_MCMCOBayes", (DL_FUNC) &_GPBayes_MCMCOBayes, 10},
     {"_GPBayes_MCMCOBayes_pred", (DL_FUNC) &_GPBayes_MCMCOBayes_pred, 12},
     {"_GPBayes_MCMCOBayesRef", (DL_FUNC) &_GPBayes_MCMCOBayesRef, 10},

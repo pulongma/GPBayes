@@ -93,6 +93,13 @@ class SP
       const Eigen::MatrixXd& input_new, const Eigen::MatrixXd& Hnew, 
       const Eigen::VectorXd& range, const Eigen::VectorXd& tail, const Eigen::VectorXd& nu, 
       const Eigen::VectorXd& nugget, const Rcpp::List& covmodel, const std::string& dtype);
+    
+    // Conditional Simulation
+    Rcpp::List condsim(const Eigen::MatrixXd& y, 
+      const Eigen::MatrixXd& H, const Eigen::MatrixXd& input,
+      const Eigen::MatrixXd& input_new, const Eigen::MatrixXd& Hnew, 
+      const double& range, const double& tail, const double& nu, 
+      const double& nugget, const Rcpp::List& covmodel, const std::string& dtype, int nsample);
 
     // MCMC algorithm
     Rcpp::List iso_MCMCOBayes(const Eigen::MatrixXd& output, const Eigen::MatrixXd& H, 
@@ -460,7 +467,7 @@ Eigen::MatrixXd SP::iso_kernel(const Eigen::MatrixXd& d, const double& range, co
 // where \eqn{\alpha} is the tail decay parameter. \eqn{\beta} is the range parameter.
 // \eqn{\nu} is the smoothness parameter. \eqn{\mathcal{U}(\cdot)} is the confluent hypergeometric
 // function of the second kind. For details about this covariance, 
-// see Ma and Bhadra (2019) at \url{https://arxiv.org/abs/1911.05865}.  
+// see Ma and Bhadra (2023; \doi{10.1080/01621459.2022.2027775}).  
 // }
 // \item{cauchy}{The generalized Cauchy covariance is given by
 // \deqn{C(h) = \left\{ 1 + \left( \frac{h}{\phi} \right)^{\alpha}  
@@ -1043,6 +1050,14 @@ Rcpp::List SP::predict(const Eigen::MatrixXd& y, const Eigen::MatrixXd& H,
 
   R.diagonal().array() += nugget;
 
+    for(int i=0; i<n; i++){
+      for(int j=0; j<m; j++){
+        if(d0(i,j)==0){
+          Rnew(i,j) += nugget;
+        }
+      }
+    }
+
   ldltR.compute(R);
   RInv = ldltR.solve(Eigen::MatrixXd::Identity(n,n));
   RH = RInv * H;
@@ -1135,6 +1150,13 @@ Rcpp::List SP::simulate_predictive_dist(const Eigen::MatrixXd& y,
     Rnew = SP::iso_kernel(d0, range(it), tail(it), nu(it), family);
 
     R.diagonal().array() += nugget(it);
+    for(int i=0; i<n; i++){
+      for(int j=0; j<m; j++){
+        if(d0(i,j)==0){
+          Rnew(i,j) += nugget(it);
+        }
+      }
+    }
 
     ldltR.compute(R);
     RInv = ldltR.solve(Eigen::MatrixXd::Identity(n,n));
@@ -1181,7 +1203,106 @@ Rcpp::List SP::simulate_predictive_dist(const Eigen::MatrixXd& y,
 
 /*****************************************************************************************/
 /*****************************************************************************************/
+// Conditional Simulation
+Rcpp::List SP::condsim(const Eigen::MatrixXd& y, 
+  const Eigen::MatrixXd& H, const Eigen::MatrixXd& input,
+  const Eigen::MatrixXd& input_new, const Eigen::MatrixXd& Hnew, 
+  const double& range, const double& tail, const double& nu, 
+  const double& nugget, const Rcpp::List& covmodel, const std::string& dtype, int nsample){
 
+  int n = y.rows();
+  int q = y.cols();
+  int m = input_new.rows();
+  int p = H.cols();
+
+
+  //int dim = input.cols();
+  Eigen::MatrixXd R(n,n), RInv(n,n), RH(n,p), HRH(p,p), Rnew(n,m), HRHInv(p,p);
+  Eigen::MatrixXd res(n,q), Ry(n,q), bhat(p,q);
+  Eigen::LDLT<Eigen::MatrixXd> ldltR, ldltH, ldlt;
+
+  Eigen::MatrixXd sig2hat(q,q), predmean(m, q);
+
+  Eigen::MatrixXd d = SP::pdist(input, input, dtype);
+  Eigen::MatrixXd d0 = SP::pdist(input, input_new, dtype);
+
+  std::string family = Rcpp::as<std::string>(covmodel["family"]);
+  std::string form = Rcpp::as<std::string>(covmodel["form"]);
+
+  double df = n-p;
+  Eigen::VectorXd Rtmp(n), tmp(p), pred_corr(m);
+  Eigen::MatrixXd ysim(m,q), L(q,q); 
+  Rcpp::List ysim_sample(nsample);
+
+#ifdef USE_R
+    GetRNGstate();
+#endif
+
+
+    R = SP::iso_kernel(d, range, tail, nu, family);
+    R.diagonal().array() += nugget;
+    Rnew = SP::iso_kernel(d0, range, tail, nu, family);
+
+    for(int i=0; i<n; i++){
+      for(int j=0; j<m; j++){
+        if(d0(i,j)==0){
+          Rnew(i,j) += nugget;
+        }
+      }
+    }
+    
+
+    ldltR.compute(R);
+    RInv = ldltR.solve(Eigen::MatrixXd::Identity(n,n));
+    RH = RInv * H;
+    HRH = H.transpose() * RH;
+    ldltH.compute(HRH);
+    Ry = RInv*y;
+
+    bhat = ldltH.solve(H.transpose()*Ry);
+    res = y - H*bhat;
+    predmean = Hnew*bhat;
+    predmean += Rnew.transpose()*(RInv*res);
+    sig2hat = res.transpose() * RInv*res / df;
+
+    HRHInv = ldltH.solve(Eigen::MatrixXd::Identity(p,p));
+
+  // simulate from posterior predictive distribution
+    for(int k=0; k<m; k++){
+      Rtmp = Rnew.col(k);
+      tmp = Hnew.row(k) - RH.transpose()*Rtmp;
+      pred_corr(k) = R(0,0) - Rtmp.dot(RInv*Rtmp) + tmp.dot(HRHInv*tmp);
+    }    
+
+    L = sig2hat.llt().matrixL();
+
+// simulate from posterior predictive distribution
+  // Progress prog(nsample, true);
+  for(int it=0; it<nsample; it++){
+    // if(Progress::check_abort()){
+    //   return R_NilValue;
+    // }
+    // prog.increment();
+
+    for(int k=0; k<m; k++){
+      ysim.row(k) =  sqrt(pred_corr(k)) * L * Rcpp::as<Eigen::VectorXd>(Rcpp::rnorm(q, 0.0, 1.0))
+                  / sqrt(Rcpp::as<double>(Rcpp::rchisq(1, df)) / df);
+    }
+    ysim += predmean;
+
+    ysim_sample[it] = ysim;
+  }
+
+
+#ifdef USE_R
+  PutRNGstate();
+#endif 
+
+
+  return ysim_sample; 
+
+
+}
 
 /*****************************************************************************************/
 /*****************************************************************************************/

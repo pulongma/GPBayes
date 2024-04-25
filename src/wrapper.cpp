@@ -93,7 +93,7 @@ using namespace Rcpp;
 //' where \eqn{\alpha} is the tail decay parameter. \eqn{\beta} is the range parameter.
 //' \eqn{\nu} is the smoothness parameter. \eqn{\mathcal{U}(\cdot)} is the confluent hypergeometric
 //' function of the second kind. For details about this covariance, 
-//' see Ma and Bhadra (2019) at \url{https://arxiv.org/abs/1911.05865}.  
+//' see Ma and Bhadra (2023; \doi{10.1080/01621459.2022.2027775}).  
 //' }
 //' \item{cauchy}{The generalized Cauchy covariance is given by
 //' \deqn{C(h) = \left\{ 1 + \left( \frac{h}{\phi} \right)^{\nu}  
@@ -886,7 +886,7 @@ SEXP distance(Eigen::Map<Eigen::MatrixXd> input1, Eigen::Map<Eigen::MatrixXd> in
 //' where \eqn{\alpha} is the tail decay parameter. \eqn{\beta} is the range parameter.
 //' \eqn{\nu} is the smoothness parameter. \eqn{\mathcal{U}(\cdot)} is the confluent hypergeometric
 //' function of the second kind. For details about this covariance, 
-//' see Ma and Bhadra (2019) at \url{https://arxiv.org/abs/1911.05865}.  
+//' see Ma and Bhadra (2023; \doi{10.1080/01621459.2022.2027775}).  
 //' }
 //' \item{cauchy}{The generalized Cauchy covariance is given by
 //' \deqn{C(h) = \left\{ 1 + \left( \frac{h}{\phi} \right)^{\nu}  
@@ -1009,7 +1009,7 @@ Eigen::MatrixXd ikernel(Eigen::Map<Eigen::MatrixXd> input1, Eigen::Map<Eigen::Ma
 //' where \eqn{\alpha} is the tail decay parameter. \eqn{\beta} is the range parameter.
 //' \eqn{\nu} is the smoothness parameter. \eqn{\mathcal{U}(\cdot)} is the confluent hypergeometric
 //' function of the second kind. For details about this covariance, 
-//' see Ma and Bhadra (2019) at \url{https://arxiv.org/abs/1911.05865}.  
+//' see Ma and Bhadra (2023; \doi{10.1080/01621459.2022.2027775}).  
 //' }
 //' \item{cauchy}{The generalized Cauchy covariance is given by
 //' \deqn{C(h) = \left\{ 1 + \left( \frac{h}{\phi} \right)^{\nu}  
@@ -1125,7 +1125,7 @@ Eigen::MatrixXd kernel(SEXP& d, const Eigen::VectorXd& range,
 //' where \eqn{\alpha} is the tail decay parameter. \eqn{\beta} is the range parameter.
 //' \eqn{\nu} is the smoothness parameter. \eqn{\mathcal{U}(\cdot)} is the confluent hypergeometric
 //' function of the second kind. For details about this covariance, 
-//' see Ma and Bhadra (2019) at \url{https://arxiv.org/abs/1911.05865}.  
+//' see Ma and Bhadra (2023; \doi{10.1080/01621459.2022.2027775}).  
 //' }
 //' \item{cauchy}{The generalized Cauchy covariance is given by
 //' \deqn{C(h) = \left\{ 1 + \left( \frac{h}{\phi} \right)^{\nu}  
@@ -1875,6 +1875,85 @@ Rcpp::List post_predictive_sampling(Eigen::Map<Eigen::MatrixXd> output, Eigen::M
 
 }
 
+
+// [[Rcpp::export]]
+Rcpp::List condsim(Eigen::Map<Eigen::MatrixXd> output, Eigen::Map<Eigen::MatrixXd> H, 
+  Eigen::Map<Eigen::MatrixXd> input, Eigen::Map<Eigen::MatrixXd> input_new, 
+  Eigen::Map<Eigen::MatrixXd> Hnew, const Rcpp::List& par, const Rcpp::List& covmodel, 
+  const std::string& dtype, int nsample){
+
+	std::string form = Rcpp::as<std::string>(covmodel["form"]);
+	//int Dim = input.cols();
+
+	Eigen::VectorXd range;
+	if(par.containsElementNamed("range")){
+		if(Rf_isNumeric(par["range"])){
+			range = Rcpp::as<Eigen::VectorXd>(par["range"]);
+		}else{
+			Rcpp::stop("The range parameter is neither a numerical vector nor a scalar.\n");
+		}
+	}else{
+		Rcpp::stop("The range parameter value is not specified in the list.\n");
+	}
+
+	Eigen::VectorXd tail;
+	if(par.containsElementNamed("tail")){
+		if(Rf_isNumeric(par["tail"])){
+			tail = Rcpp::as<Eigen::VectorXd>(par["tail"]);
+		}else{
+			Rcpp::stop("The tail parameter is neither a numerical vector nor a scalar.\n");
+		}
+		
+	}else{
+		tail = Eigen::VectorXd::Ones(1); 
+	}
+
+	Eigen::VectorXd nu;
+	if(par.containsElementNamed("nu")){
+		if(Rf_isNumeric(par["nu"])){
+			nu = Rcpp::as<Eigen::VectorXd>(par["nu"]);
+		}else{
+			Rcpp::stop("The nu parameter is neither a numerical vector nor a scalar.\n");
+		}
+	}else{
+		Rcpp::stop("The smoothness parameter is not specified in the list.\n");
+	}
+	
+	double nugget = 0;
+	if(par.containsElementNamed("nugget")){
+		if(Rf_isNumeric(par["nugget"])){
+			nugget = Rcpp::as<double>(par["nugget"]);
+		}else{
+			Rcpp::stop("The nugget parameter is neither a numerical vector nor a scalar.\n");
+		}
+	}else{
+		Rcpp::stop("The nugget parameter is not specified in the list.\n");		
+	}
+
+
+	UQ uq;
+
+	Rcpp::List pred;
+
+	if(form=="isotropic"){
+		SP sp;
+		pred = sp.condsim(output, H, input, input_new, Hnew, range(0), tail(0), nu(0),
+	        nugget, covmodel, dtype, nsample);
+	}else if(form=="tensor"){
+		pred = uq.tensor_condsim(output, H, input, input_new, 
+				   Hnew, range, tail, nu, nugget, covmodel, nsample);
+
+	}else if(form=="ARD"){
+		pred = uq.ARD_condsim(output, H, input, input_new, 
+				   Hnew, range, tail(0), nu(0), nugget, covmodel, nsample);
+
+	}
+
+
+	return pred;
+
+}
+
 /**************************************************************************************/
 // [[Rcpp::export]]
 Rcpp::List MCMCOBayes(Eigen::Map<Eigen::MatrixXd> output, Eigen::Map<Eigen::MatrixXd> H,  
@@ -1928,6 +2007,7 @@ Rcpp::List MCMCOBayes(Eigen::Map<Eigen::MatrixXd> output, Eigen::Map<Eigen::Matr
 			MCMCsample = uq.tensor_MCMCOBayes(output, H, input, range, tail, nu,  
 			  	nugget, covmodel, smoothness_est, proposal, nsample, verbose);
 		}else if(form=="ARD"){
+			// Rcpp::Rcout<<"begin MCMC: create UQ object\n";
 			MCMCsample = uq.ARD_MCMCOBayes(output, H, input, range, tail, nu, 
 			  	nugget, covmodel, smoothness_est, proposal, nsample, verbose);		
 		}else if(form=="isotropic"){
