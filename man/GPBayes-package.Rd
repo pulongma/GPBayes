@@ -12,7 +12,7 @@ Gaussian processes (GPs) have been widely used to model spatial data, spatio-tem
 \itemize{
   \item{Data types: For many scientific applications, spatial data, spatio-temporal data, and computer experiments arise naturally. This package provides a comprehensive set of basic tools to fit GaSP models for univariate and multivariate spatial data, spatio-temporal data, computer experiments. Various covariance functions have been implemented including the Confluent Hypergeometric covariance functions, the Matérn covariance functions, the Gaussian covariance function, the generalized Cauchy covariance function. These covariance families can be in isotropic form, in tensor form, or in automatic relevance determination form. The routines \code{\link{kernel}} and \code{\link{ikernel}} contain the details of implementation.  }
 
-  \item{Model simulation: This package can simulate realizations from GaSP for different types of data including spatial data, spatio-temporal data, and computer experiments. This feature is quite useful in part because benchmarks are used to evaluate the performance of GaSP models. This functionality is implemented in the routine \code{\link{gp.sim}}.}
+  \item{Model simulation: This package can simulate realizations from GaSP for different types of data including spatial data, spatio-temporal data, and computer experiments. This feature is quite useful in part because benchmarks are used to evaluate the performance of GaSP models. This functionality is implemented in the routine \code{\link{gp.sim}} for unconditional simulation and \code{\link{gp.condsim}} for conditional simulation.}
 
   \item{Model fitting: Both maximum likelihood methods (or its variants) and Bayes estimation methods such as maximum a posterior (MAP) and Markov chain Monte Carlo (MCMC) methods are implemented. In this package, the nugget parameter is included in the model by default for the sake of better prediction performance and stable computation in practice. In addition, the smoothness parameter in covariance functions such as the Matérn class and the Confluent Hypergeometric class can be estimated. The routine \code{\link{gp.optim}} provides optimization based estimation approaches and the routine \code{\link{gp.mcmc}} provides MCMC algorithms based estimation approaches.}
 
@@ -31,7 +31,7 @@ Pulong Ma \email{mpulong@gmail.com}
 
   \item{Cressie, N. (1993). ``Statistics for Spatial Data.'' John Wiley & Sons, New York, revised edition.}
 
-  \item{Ma and Bhadra (2019). ``Beyond Matérn: On a Class of Interpretable Confluent Hypergeometric Covariance Functions.'' arXiv: 1911.05865. \url{https://arxiv.org/abs/1911.05865}.}
+  \item{Ma and Bhadra (2023). ``Beyond Matérn: On a Class of Interpretable Confluent Hypergeometric Covariance Functions.'' \emph{Journal of the American Statistical Association} \strong{118}(543), 2045-2058.}
 
   \item{Sacks, Jerome, William J Welch, Toby J Mitchell, and Henry P Wynn. (1989). ``Design and Analysis of Computer Experiments.'' \emph{Statistical Science} \strong{4}(4). Institute of Mathematical Statistics: 409–435.}
 

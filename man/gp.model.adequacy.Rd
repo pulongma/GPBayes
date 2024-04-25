@@ -27,7 +27,7 @@ gp.model.adequacy(
 \code{TRUE}, \strong{ljpd} is calculated.}
 }
 \value{
-a list containingg \strong{pD}, \strong{DIC}, \strong{lppd}, \strong{ljpd}.
+a list containing \strong{pD}, \strong{DIC}, \strong{lppd}, \strong{ljpd}.
 }
 \description{
 This function computes effective number of parameters (pD), deviance information criterion (DIC), logarithmic pointwise predictive density (lppd), and

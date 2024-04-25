@@ -31,7 +31,7 @@ all model parameters.}
 }}
 }
 \value{
-a list of predictive mean, predictive standard deviation, 95% predictive intervals
+a list of predictive mean, predictive standard deviation, 95\% predictive intervals
 }
 \description{
 This function provides the capability to make prediction based on a GaSP

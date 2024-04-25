@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{CH}
 \alias{CH}
-\title{The Confluent Hypergeometric correlation function proposed by Ma and Bhadra (2019)}
+\title{The Confluent Hypergeometric correlation function proposed by Ma and Bhadra (2023)}
 \usage{
 CH(d, range, tail, nu)
 }
@@ -25,8 +25,9 @@ a distance matrix. The Confluent Hypergeometric correlation function is given by
 \mathcal{U}\left(\alpha, 1-\nu,  \biggr(\frac{h}{\beta}\biggr)^2 \right),}
 where \eqn{\alpha} is the tail decay parameter. \eqn{\beta} is the range parameter.
 \eqn{\nu} is the smoothness parameter. \eqn{\mathcal{U}(\cdot)} is the confluent hypergeometric
-function of the second kind. For details about this covariance, 
-see Ma and Bhadra (2019) at \url{https://arxiv.org/abs/1911.05865}.
+function of the second kind. Note that this parameterization of the CH covariance
+is different from the one in Ma and Bhadra (2023). For details about this covariance, 
+see Ma and Bhadra (2023; \doi{10.1080/01621459.2022.2027775}).
 }
 \seealso{
 \link{GPBayes-package}, \code{\link{GaSP}}, \linkS4class{gp}, \code{\link{matern}}, \code{\link{kernel}}, \code{\link{ikernel}}

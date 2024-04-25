@@ -59,7 +59,7 @@ specific form of covariance structures including the isotropic form, tensor form
 where \eqn{\alpha} is the tail decay parameter. \eqn{\beta} is the range parameter.
 \eqn{\nu} is the smoothness parameter. \eqn{\mathcal{U}(\cdot)} is the confluent hypergeometric
 function of the second kind. For details about this covariance, 
-see Ma and Bhadra (2019) at \url{https://arxiv.org/abs/1911.05865}.  
+see Ma and Bhadra (2023; \doi{10.1080/01621459.2022.2027775}).  
 }
 \item{cauchy}{The generalized Cauchy covariance is given by
 \deqn{C(h) = \left\{ 1 + \left( \frac{h}{\phi} \right)^{\nu}  
@@ -122,15 +122,20 @@ a numerical matrix of Fisher information
 }
 \description{
 This function computes the Fisher information matrix \eqn{I(\sigma^2, \boldsymbol \theta)} for a 
-Gaussian process model. 
-The standard likelihood is defined as 
-\deqn{ L(\mathbf{b}, \sigma^2, \boldsymbol \theta; \mathbf{y}) = \mathcal{N}_n(\mathbf{H}\mathbf{b}, \sigma^2 \mathbf{R}),
+Gaussian process model \eqn{y(\cdot) \sim \mathcal{GP}(h^\top(\mathbf{x})\mathbf{b}, \sigma^2 c(\cdot, \cdot) )}, where
+\eqn{c(\mathbf{x}_1, \mathbf{x}_2) = r(\mathbf{x}_1, \mathbf{x}_2) + \tau^2\mathbf{1}(\mathbf{x}_1=\mathbf{x}_2) } with correlation function
+\eqn{r(\cdot, \cdot)} and nugget parameter \eqn{\tau^2}; \eqn{\mathbf{b}} is a vector of regression coefficients, 
+\eqn{\sigma^2} is the variance parameter (or partial sill). 
+
+
+Given \eqn{n} data points that are assumed to be realizations from the GP model,    
+the standard likelihood is defined as 
+\deqn{ L(\mathbf{b}, \sigma^2, \boldsymbol \theta; \mathbf{y}) = \mathcal{N}_n(\mathbf{H}\mathbf{b}, \sigma^2 (\mathbf{R} + \tau^2\mathbf{I}) ),
 }
 where \eqn{\mathbf{y}:=(y(\mathbf{x}_1), \ldots, y(\mathbf{x}_n))^\top} is a vector of \eqn{n} observations.
-\eqn{\mathbf{H}} is a matrix of covariates, \eqn{\mathbf{b}} is a vector of regression coefficients, 
-\eqn{\sigma^2} is the variance parameter, \eqn{\boldsymbol \theta} contains correlation
-parameters and nugget parameter, \eqn{\mathbf{R}} denotes the correlation matrix 
-plus nugget variance on the main diagonal.
+\eqn{\mathbf{H}} is a matrix of covariates, \eqn{\boldsymbol \theta} contains correlation
+parameters and nugget parameter, \eqn{\mathbf{R}} denotes the \eqn{n}-by-\eqn{n} correlation matrix. 
+
 
 The integrated likelihood is defined as
 \deqn{

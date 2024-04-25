@@ -27,7 +27,7 @@ specific form of covariance structures including the isotropic form, tensor form
 where \eqn{\alpha} is the tail decay parameter. \eqn{\beta} is the range parameter.
 \eqn{\nu} is the smoothness parameter. \eqn{\mathcal{U}(\cdot)} is the confluent hypergeometric
 function of the second kind. For details about this covariance, 
-see Ma and Bhadra (2019) at \url{https://arxiv.org/abs/1911.05865}.  
+see Ma and Bhadra (2023; \doi{10.1080/01621459.2022.2027775}).  
 }
 \item{cauchy}{The generalized Cauchy covariance is given by
 \deqn{C(h) = \left\{ 1 + \left( \frac{h}{\phi} \right)^{\nu}  
