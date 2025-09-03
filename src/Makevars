@@ -3,8 +3,8 @@
 ## enable compilation with C++14 (where available).  
 ## 
 CXX_STD = CXX17
-GSL_CFLAGS = -I/usr/include
-GSL_LIBS   = -L/usr/lib -lgsl -lgslcblas -lm
+GSL_CFLAGS = -I/opt/homebrew/Cellar/gsl/2.7.1/include
+GSL_LIBS   = -L/opt/homebrew/Cellar/gsl/2.7.1/lib -lgsl -lgslcblas
 
 #PKG_CFLAGS = $(GSL_CFLAGS) $(SHLIB_OPENMP_CFLAGS) -DEIGEN_NO_DEBUG 
 #PKG_CPPFLAGS = $(GSL_CFLAGS) -DEIGEN_NO_DEBUG

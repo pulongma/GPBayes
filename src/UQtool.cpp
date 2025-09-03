@@ -2045,6 +2045,7 @@ Rcpp::List UQ::ARD_MCMCOBayes(const Eigen::MatrixXd& output, const Eigen::Matrix
       // loglik_curr = UQ::MLoglik(range_curr, tail_curr, nu_curr, nugget_curr, output, H, d, covmodel);
       // update range parameter 
       for(int k=0; k<Dim; k++){
+        range_prop = range_curr;
         // generate proposal
         range_prop(k) = exp(Rcpp::rnorm(1, log(range_curr(k)), Delta_range(k))[0]);
         loglik_prop = UQ::MLoglik(range_prop, tail_curr, nu_curr, nugget_curr, output, H, d, covmodel);
@@ -2568,6 +2569,7 @@ Rcpp::List UQ::ARD_MCMCSBayes(const Eigen::MatrixXd& output, const Eigen::Matrix
       // loglik_curr = UQ::MLoglik(range_curr, tail_curr, nu_curr, nugget_curr, output, H, d, covmodel);
       // update range parameter 
       for(int k=0; k<Dim; k++){
+        range_prop = range_curr;
         // generate proposal
         range_prop(k) = ilogit(Rcpp::rnorm(1, logit(range_curr(k), range_lb(k), range_ub(k)), Delta_range(k))[0], range_lb(k), range_ub(k));
         loglik_prop = UQ::MLoglik(range_prop, tail_curr, nu_curr, nugget_curr, output, H, d, covmodel);
@@ -2727,7 +2729,7 @@ Rcpp::List UQ::ARD_MCMCSBayes(const Eigen::MatrixXd& output, const Eigen::Matrix
 
       // update range parameter 
       for(int k=0; k<Dim; k++){
-
+        range_prop = range_curr;
         // generate proposal
         range_prop(k) = ilogit(Rcpp::rnorm(1, logit(range_curr(k), range_lb(k), range_ub(k)), Delta_range(k))[0], range_lb(k), range_ub(k));
         loglik_prop = UQ::MLoglik(range_prop, tail_curr, nu_curr, nugget_curr, output, H, d, covmodel);
@@ -2980,7 +2982,7 @@ Rcpp::List UQ::tensor_MCMCOBayes(const Eigen::MatrixXd& output, const Eigen::Mat
 
       // update range parameter 
       for(int k=0; k<Dim; k++){
-
+        range_prop = range_curr;
         // generate proposal
         range_prop(k) = exp(Rcpp::rnorm(1, log(range_curr(k)), Delta_range(k))[0]);
         loglik_prop = UQ::MLoglik(range_prop, tail_curr, nu_curr, nugget_curr, output, H, d, covmodel);
@@ -3019,7 +3021,7 @@ Rcpp::List UQ::tensor_MCMCOBayes(const Eigen::MatrixXd& output, const Eigen::Mat
 
       // update tail decay parameter
       for(int k=0; k<Dim; k++){
-
+        tail_prop = tail_curr;
         // generate proposal
         tail_prop(k) = exp(Rcpp::rnorm(1, log(tail_curr(k)), Delta_tail(k))[0]);
         loglik_prop = UQ::MLoglik(range_curr, tail_prop, nu_curr, nugget_curr, output, H, d, covmodel);
@@ -3155,7 +3157,7 @@ Rcpp::List UQ::tensor_MCMCOBayes(const Eigen::MatrixXd& output, const Eigen::Mat
 
       // update range parameter 
       for(int k=0; k<Dim; k++){
-
+        range_prop = range_curr;
         // generate proposal
         range_prop(k) = exp(Rcpp::rnorm(1, log(range_curr(k)), Delta_range(k))[0]);
         loglik_prop = UQ::MLoglik(range_prop, tail_curr, nu_curr, nugget_curr, output, H, d, covmodel);
@@ -3557,7 +3559,7 @@ Rcpp::List UQ::tensor_MCMCSBayes(const Eigen::MatrixXd& output, const Eigen::Mat
 
       // update range parameter 
       for(int k=0; k<Dim; k++){
-
+        range_prop = range_curr;
         // generate proposal
         range_prop(k) = ilogit(Rcpp::rnorm(1, logit(range_curr(k), range_lb(k), range_ub(k)), Delta_range(k))[0], range_lb(k), range_ub(k));
         loglik_prop = UQ::MLoglik(range_prop, tail_curr, nu_curr, nugget_curr, output, H, d, covmodel);
@@ -3595,7 +3597,7 @@ Rcpp::List UQ::tensor_MCMCSBayes(const Eigen::MatrixXd& output, const Eigen::Mat
 
       // update tail decay parameter
       for(int k=0; k<Dim; k++){
-
+        tail_prop = tail_curr;
         // generate proposal
         tail_prop(k) = ilogit(Rcpp::rnorm(1, logit(tail_curr(k), tail_lb(k), tail_ub(k)), Delta_tail(k))[0], tail_lb(k), tail_ub(k));
         loglik_prop = UQ::MLoglik(range_curr, tail_prop, nu_curr, nugget_curr, output, H, d, covmodel);
@@ -4005,6 +4007,7 @@ Rcpp::List UQ::ARD_MCMCOBayes(const Eigen::MatrixXd& output, const Eigen::Matrix
       // loglik_curr = UQ::MLoglik(range_curr, tail_curr, nu_curr, nugget_curr, output, H, d, covmodel);
       // update range parameter 
       for(int k=0; k<Dim; k++){
+        range_prop = range_curr;
         // generate proposal
         range_prop(k) = exp(Rcpp::rnorm(1, log(range_curr(k)), Delta_range(k))[0]);
         loglik_prop = UQ::MLoglik(range_prop, tail_curr, nu_curr, nugget_curr, output, H, d, covmodel);
@@ -4210,7 +4213,7 @@ Rcpp::List UQ::ARD_MCMCOBayes(const Eigen::MatrixXd& output, const Eigen::Matrix
 
       // update range parameter 
       for(int k=0; k<Dim; k++){
-
+        range_prop = range_curr;
         // generate proposal
         range_prop(k) = exp(Rcpp::rnorm(1, log(range_curr(k)), Delta_range(k))[0]);
         loglik_prop = UQ::MLoglik(range_prop, tail_curr, nu_curr, nugget_curr, output, H, d, covmodel);
@@ -4647,6 +4650,7 @@ Rcpp::List UQ::ARD_MCMCSBayes(const Eigen::MatrixXd& output, const Eigen::Matrix
       // loglik_curr = UQ::MLoglik(range_curr, tail_curr, nu_curr, nugget_curr, output, H, d, covmodel);
       // update range parameter 
       for(int k=0; k<Dim; k++){
+        range_prop = range_curr;
         // generate proposal
         range_prop(k) = ilogit(Rcpp::rnorm(1, logit(range_curr(k), range_lb(k), range_ub(k)), Delta_range(k))[0], range_lb(k), range_ub(k));
         loglik_prop = UQ::MLoglik(range_prop, tail_curr, nu_curr, nugget_curr, output, H, d, covmodel);
@@ -4851,7 +4855,7 @@ Rcpp::List UQ::ARD_MCMCSBayes(const Eigen::MatrixXd& output, const Eigen::Matrix
       for(int k=0; k<Dim; k++){
 
         /*************************************************************************************/
-
+        range_prop = range_curr;
         // generate proposal
         range_prop(k) = ilogit(Rcpp::rnorm(1, logit(range_curr(k), range_lb(k), range_ub(k)), Delta_range(k))[0], range_lb(k), range_ub(k));
         loglik_prop = UQ::MLoglik(range_prop, tail_curr, nu_curr, nugget_curr, output, H, d, covmodel);
@@ -5177,7 +5181,7 @@ Rcpp::List UQ::tensor_MCMCOBayes(const Eigen::MatrixXd& output, const Eigen::Mat
 
       // update range parameter 
       for(int k=0; k<Dim; k++){
-
+        range_prop = range_curr;
         // generate proposal
         range_prop(k) = exp(Rcpp::rnorm(1, log(range_curr(k)), Delta_range(k))[0]);
         loglik_prop = UQ::MLoglik(range_prop, tail_curr, nu_curr, nugget_curr, output, H, d, covmodel);
@@ -5216,7 +5220,7 @@ Rcpp::List UQ::tensor_MCMCOBayes(const Eigen::MatrixXd& output, const Eigen::Mat
 
       // update tail decay parameter
       for(int k=0; k<Dim; k++){
-
+        tail_prop = tail_curr;
         // generate proposal
         tail_prop(k) = exp(Rcpp::rnorm(1, log(tail_curr(k)), Delta_tail(k))[0]);
         loglik_prop = UQ::MLoglik(range_curr, tail_prop, nu_curr, nugget_curr, output, H, d, covmodel);
@@ -5394,7 +5398,7 @@ Rcpp::List UQ::tensor_MCMCOBayes(const Eigen::MatrixXd& output, const Eigen::Mat
 
       // update range parameter 
       for(int k=0; k<Dim; k++){
-
+        range_prop = range_curr;
         // generate proposal
         range_prop(k) = exp(Rcpp::rnorm(1, log(range_curr(k)), Delta_range(k))[0]);
         loglik_prop = UQ::MLoglik(range_prop, tail_curr, nu_curr, nugget_curr, output, H, d, covmodel);
@@ -5867,7 +5871,7 @@ Rcpp::List UQ::tensor_MCMCSBayes(const Eigen::MatrixXd& output, const Eigen::Mat
 
       // update range parameter 
       for(int k=0; k<Dim; k++){
-
+        range_prop = range_curr;
         // generate proposal
         range_prop(k) = ilogit(Rcpp::rnorm(1, logit(range_curr(k), range_lb(k), range_ub(k)), Delta_range(k))[0], range_lb(k), range_ub(k));
         loglik_prop = UQ::MLoglik(range_prop, tail_curr, nu_curr, nugget_curr, output, H, d, covmodel);
@@ -5905,7 +5909,7 @@ Rcpp::List UQ::tensor_MCMCSBayes(const Eigen::MatrixXd& output, const Eigen::Mat
 
       // update tail decay parameter
       for(int k=0; k<Dim; k++){
-
+        tail_prop = tail_curr;
         // generate proposal
         tail_prop(k) = ilogit(Rcpp::rnorm(1, logit(tail_curr(k), tail_lb(k), tail_ub(k)), Delta_tail(k))[0], tail_lb(k), tail_ub(k));
         loglik_prop = UQ::MLoglik(range_curr, tail_prop, nu_curr, nugget_curr, output, H, d, covmodel);
@@ -6075,7 +6079,7 @@ Rcpp::List UQ::tensor_MCMCSBayes(const Eigen::MatrixXd& output, const Eigen::Mat
 
       // update range parameter 
       for(int k=0; k<Dim; k++){
-
+        range_prop = range_curr;
         // generate proposal
         range_prop(k) = ilogit(Rcpp::rnorm(1, logit(range_curr(k), range_lb(k), range_ub(k)), Delta_range(k))[0], range_lb(k), range_ub(k));
         loglik_prop = UQ::MLoglik(range_prop, tail_curr, nu_curr, nugget_curr, output, H, d, covmodel);

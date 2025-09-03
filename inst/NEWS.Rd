@@ -3,6 +3,15 @@
 \newcommand{\ghpr}{\href{https://github.com/pulongma/GPBayes/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/pulongma/GPBayes/issues/#1}{##1}}
 
+\section{Changes in GPBayes version 0.1.0-7 (2025-9-03)}{
+	\itemize{
+		\item Fixed a bug in MCMC algorithms when ARD and tensor correlations are used.
+		\item Fixed a bug in \link{gp.get.mcmc}. 
+		\item Fixed a bug in calculating the derivative of Matern ARD correlation functions.
+	}
+}
+
+
 \section{Changes in GPBayes version 0.1.0-6 (2024-4-24)}{
 	\itemize{
 		\item Added checks for the arguments in \link{gp.mcmc} when a ARD type of covariances is specified.

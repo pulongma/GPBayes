@@ -681,7 +681,7 @@ gp.mcmc <- function(obj, input.new=NULL, method="Cauchy_prior", prior=list(), pr
 #' (\strong{MPLE}) is used.}
 #' \item{MMLE}{This indicates that the \emph{maximum marginal likelihood estimation} 
 #' (\strong{MMLE}) is used.}
-#' \item{MAP}{This indicates that the marginal/integrated posterior is maximized.}
+#' \item{MAP}{This indicates that the marginal/integrated posterior is maximized. It's not yet supported.}
 #' }
 #' @param opt a list of arguments to setup the \code{\link[stats]{optim}} routine. Current implementation uses three arguments: 
 #' \describe{
@@ -689,28 +689,9 @@ gp.mcmc <- function(obj, input.new=NULL, method="Cauchy_prior", prior=list(), pr
 #' \item{lower}{The lower bound for parameters.}
 #' \item{upper}{The upper bound for parameters.}
 #'}
-#' @param bound Default value is \code{NULL}. Otherwise, it should be a list
-#' containing the following elements depending on the covariance class:
-#' \describe{
-#' \item{\strong{nugget}}{a list of bounds for the nugget parameter.
-#' It is a list containing lower bound \strong{lb} and 
-#' upper bound \strong{ub} with default value 
-#' \code{list(lb=0, ub=Inf)}.}
-#' \item{\strong{range}}{a list of bounds for the range parameter. Tt has default value
-#' \code{range=list(lb=0, ub=Inf)} for the Confluent Hypergeometric covariance, the Matérn covariance, exponential covariance, Gaussian 
-#' covariance, powered-exponential covariance, and Cauchy covariance. The log of range parameterization
-#'  is used: \eqn{\log(\phi)}.}
-#' \item{\strong{tail}}{a list of bounds for the tail decay parameter. It has default value
-#' \code{list(lb=0, ub=Inf)}} for the Confluent Hypergeometric covariance and the Cauchy covariance.
-#'  \item{\strong{nu}}{a list of bounds for the smoothness parameter. It has default value 
-#' \code{list(lb=0, ub=Inf)} for the Confluent Hypergeometric covariance and the Matérn covariance.
-#' when the powered-exponential or Cauchy class 
-#' is used, it has default value \strong{nu}=\code{list(lb=0, ub=2)}. 
-#' This can be achived by specifying the \strong{lower} bound in \code{opt}.}
-#' }
 #'
-#' @return a list of updated \code{\link{gp}} object \strong{obj} and 
-#' fitted information \strong{fit}
+#' @return a list of updated \code{\link{gp}} object \code{obj} and 
+#' fitted information \code{fit}
 #' 
 #' @author Pulong Ma \email{mpulong@@gmail.com}
 #' 
@@ -738,13 +719,13 @@ gp.mcmc <- function(obj, input.new=NULL, method="Cauchy_prior", prior=list(), pr
 #' fit.optim = gp.optim(obj, method="MPLE")
 #' 
 #' 
-gp.optim <- function(obj, method="MMLE", opt=NULL, bound=NULL){
+gp.optim <- function(obj, method="MMLE", opt=NULL){
 
 
   if(method=="MPLE"){
-    fit = MPLE(obj=obj, opt=opt, bound=bound)
+    fit = MPLE(obj=obj, opt=opt)
   }else if(method=="MMLE"){
-    fit = MMLE(obj=obj, opt=opt, bound=bound)
+    fit = MMLE(obj=obj, opt=opt)
   }else if(method=="MAP"){
     stop("To be supported.\n")
   }else{
@@ -1277,6 +1258,7 @@ gp.condsim = function(obj, XX, nsample=1, seed=NULL){
 #' @description This function serves as a wrapper to build, fit, and make prediction 
 #' for a Gaussian process model. It calls on functions \code{\link{gp}}, \code{\link{gp.mcmc}},
 #' \code{\link{gp.optim}}, \code{\link{gp.predict}}.
+#' 
 #' @param formula an object of \code{formula} class that specifies regressors; see \code{\link[stats]{formula}} for details.
 #' @param output a numerical vector including observations or outputs in a GaSP
 #' @param input a matrix including inputs in a GaSP
@@ -1403,25 +1385,9 @@ gp.condsim = function(obj, XX, nsample=1, seed=NULL){
 #'  \item{method}{The optimization method: \code{Nelder-Mead} or \code{L-BFGS-B}.}
 #' \item{lower}{The lower bound for parameters.}
 #' \item{upper}{The upper bound for parameters.}
-#'}
-#' @param bound Default value is \code{NULL}. Otherwise, it should be a list
-#' containing the following elements depending on the covariance class:
-#' \describe{
-#' \item{\strong{nugget}}{a list of bounds for the nugget parameter.
-#' It is a list containing lower bound \strong{lb} and 
-#' upper bound \strong{ub} with default value 
-#' \code{list(lb=0, ub=Inf)}.}
-#' \item{\strong{range}}{a list of bounds for the range parameter. It has default value
-#' \code{range=list(lb=0, ub=Inf)} for the Confluent Hypergeometric covariance, the Matérn covariance, exponential covariance, Gaussian 
-#' covariance, powered-exponential covariance, and Cauchy covariance. The log of range parameterization
-#'  is used: \eqn{\log(\phi)}.}
-#' \item{\strong{tail}}{a list of bounds for the tail decay parameter. It has default value
-#' \code{list(lb=0, ub=Inf)}} for the Confluent Hypergeometric covariance and the Cauchy covariance.
-#'  \item{\strong{nu}}{a list of bounds for the smoothness parameter. It has default value 
-#' \code{list(lb=0, ub=Inf)} for the Confluent Hypergeometric covariance and the Matérn covariance.
-#' when the powered-exponential or Cauchy class 
-#' is used, it has default value \strong{nu}=\code{list(lb=0, ub=2)}. 
-#' This can be achieved by specifying the \strong{lower} bound in \code{opt}.}
+#'
+#' It should be specified according to the covariance class. By default, its natural parameter space is used. 
+#' That is, no bounds are imposed near the boundaries of parameters (e.g., 0, Inf).
 #' }
 #' @param dtype a string indicating the type of distance:
 #' \describe{
@@ -1463,7 +1429,7 @@ GaSP <- function(formula=~1, output, input, param, smooth.est=FALSE,
               cov.model=list(family="CH", form="isotropic"), 
               model.fit="Cauchy_prior", prior=list(),
               proposal=list(range=0.35, tail=2, nugget=.8, nu=.8),
-              nsample=5000, burnin=1000, opt=NULL, bound=NULL, 
+              nsample=5000, burnin=1000, opt=NULL, 
               dtype="Euclidean", verbose=TRUE){
 
   #message("Creating the gp object.\n")
@@ -1572,7 +1538,7 @@ GaSP <- function(formula=~1, output, input, param, smooth.est=FALSE,
 
   }else if(model.fit=="MMLE"){
     message("Starting optimization ...\n")
-    fit = gp.optim(obj, method="MMLE", opt=opt, bound=bound)
+    fit = gp.optim(obj, method="MMLE", opt=opt)
     message("Finish optimization ...\n")
     fit.obj = fit$obj
     if(!is.null(input.new)){
@@ -1582,7 +1548,7 @@ GaSP <- function(formula=~1, output, input, param, smooth.est=FALSE,
     fit.obj@info$MMLE = fit$fit 
   }else if(model.fit=="MPLE"){
     message("Starting optimization ...\n")
-    fit = gp.optim(obj, method="MPLE", opt=opt, bound=bound)
+    fit = gp.optim(obj, method="MPLE", opt=opt)
     message("Finish optimization ...\n")
     fit.obj = fit$obj
     if(!is.null(input.new)){
@@ -1592,7 +1558,7 @@ GaSP <- function(formula=~1, output, input, param, smooth.est=FALSE,
     fit.obj@info$MPLE = fit$fit
   }else if(model.fit=="MAP"){
     message("Starting optimization ...\n")
-    fit = gp.optim(obj, method="MAP", opt=opt, bound=bound)
+    fit = gp.optim(obj, method="MAP", opt=opt)
     message("Finish optimization ...\n")
     fit.obj = fit$obj
     if(!is.null(input.new)){
@@ -1662,7 +1628,13 @@ gp.get.mcmc = function(obj, burnin=500){
     }
 
     if(exists("pred", where=obj@mcmc)){
-      predmat = obj@mcmc$pred[,,-c(1:burnin),drop=FALSE] 
+
+      if(burnin>=1){
+        predmat = obj@mcmc$pred$samples[,,-c(1:burnin),drop=FALSE] 
+      }else{
+        predmat = obj@mcmc$pred$samples 
+      }
+      
       predmean = apply(predmat, c(1,2), mean)
       predsd = apply(predmat, c(1,2), sd)
       lower95 = apply(predmat, c(1,2), quantile, 0.025)

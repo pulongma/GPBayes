@@ -18,7 +18,6 @@ GaSP(
   nsample = 5000,
   burnin = 1000,
   opt = NULL,
-  bound = NULL,
   dtype = "Euclidean",
   verbose = TRUE
 )
@@ -158,26 +157,9 @@ corresponding to the uniform prior over the support \eqn{(lb, ub)}.
  \item{method}{The optimization method: \code{Nelder-Mead} or \code{L-BFGS-B}.}
 \item{lower}{The lower bound for parameters.}
 \item{upper}{The upper bound for parameters.}
-}}
 
-\item{bound}{Default value is \code{NULL}. Otherwise, it should be a list
-containing the following elements depending on the covariance class:
-\describe{
-\item{\strong{nugget}}{a list of bounds for the nugget parameter.
-It is a list containing lower bound \strong{lb} and 
-upper bound \strong{ub} with default value 
-\code{list(lb=0, ub=Inf)}.}
-\item{\strong{range}}{a list of bounds for the range parameter. It has default value
-\code{range=list(lb=0, ub=Inf)} for the Confluent Hypergeometric covariance, the Matérn covariance, exponential covariance, Gaussian 
-covariance, powered-exponential covariance, and Cauchy covariance. The log of range parameterization
- is used: \eqn{\log(\phi)}.}
-\item{\strong{tail}}{a list of bounds for the tail decay parameter. It has default value
-\code{list(lb=0, ub=Inf)}} for the Confluent Hypergeometric covariance and the Cauchy covariance.
- \item{\strong{nu}}{a list of bounds for the smoothness parameter. It has default value 
-\code{list(lb=0, ub=Inf)} for the Confluent Hypergeometric covariance and the Matérn covariance.
-when the powered-exponential or Cauchy class 
-is used, it has default value \strong{nu}=\code{list(lb=0, ub=2)}. 
-This can be achieved by specifying the \strong{lower} bound in \code{opt}.}
+It should be specified according to the covariance class. By default, its natural parameter space is used. 
+That is, no bounds are imposed near the boundaries of parameters (e.g., 0, Inf).
 }}
 
 \item{dtype}{a string indicating the type of distance:

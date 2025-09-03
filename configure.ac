@@ -5,7 +5,7 @@
 ## Copied and adapted from RcppGSL package 
 ## Process this file with autoconf to produce a configure script.
 ##
-AC_INIT(GPBayes, 0.1.0-6, mpulong@gmail.com)
+AC_INIT(GPBayes, 0.1.0-7, mpulong@gmail.com)
 
 
 ## Use gsl-config to find arguments for compiler and linker flags

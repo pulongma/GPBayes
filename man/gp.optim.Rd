@@ -4,7 +4,7 @@
 \alias{gp.optim}
 \title{A wraper to fit a Gaussian stochastic process model with optimization methods}
 \usage{
-gp.optim(obj, method = "MMLE", opt = NULL, bound = NULL)
+gp.optim(obj, method = "MMLE", opt = NULL)
 }
 \arguments{
 \item{obj}{an \code{S4} object \linkS4class{gp}}
@@ -15,7 +15,7 @@ gp.optim(obj, method = "MMLE", opt = NULL, bound = NULL)
 (\strong{MPLE}) is used.}
 \item{MMLE}{This indicates that the \emph{maximum marginal likelihood estimation} 
 (\strong{MMLE}) is used.}
-\item{MAP}{This indicates that the marginal/integrated posterior is maximized.}
+\item{MAP}{This indicates that the marginal/integrated posterior is maximized. It's not yet supported.}
 }}
 
 \item{opt}{a list of arguments to setup the \code{\link[stats]{optim}} routine. Current implementation uses three arguments: 
@@ -24,30 +24,10 @@ gp.optim(obj, method = "MMLE", opt = NULL, bound = NULL)
 \item{lower}{The lower bound for parameters.}
 \item{upper}{The upper bound for parameters.}
 }}
-
-\item{bound}{Default value is \code{NULL}. Otherwise, it should be a list
-containing the following elements depending on the covariance class:
-\describe{
-\item{\strong{nugget}}{a list of bounds for the nugget parameter.
-It is a list containing lower bound \strong{lb} and 
-upper bound \strong{ub} with default value 
-\code{list(lb=0, ub=Inf)}.}
-\item{\strong{range}}{a list of bounds for the range parameter. Tt has default value
-\code{range=list(lb=0, ub=Inf)} for the Confluent Hypergeometric covariance, the Matérn covariance, exponential covariance, Gaussian 
-covariance, powered-exponential covariance, and Cauchy covariance. The log of range parameterization
- is used: \eqn{\log(\phi)}.}
-\item{\strong{tail}}{a list of bounds for the tail decay parameter. It has default value
-\code{list(lb=0, ub=Inf)}} for the Confluent Hypergeometric covariance and the Cauchy covariance.
- \item{\strong{nu}}{a list of bounds for the smoothness parameter. It has default value 
-\code{list(lb=0, ub=Inf)} for the Confluent Hypergeometric covariance and the Matérn covariance.
-when the powered-exponential or Cauchy class 
-is used, it has default value \strong{nu}=\code{list(lb=0, ub=2)}. 
-This can be achived by specifying the \strong{lower} bound in \code{opt}.}
-}}
 }
 \value{
-a list of updated \code{\link{gp}} object \strong{obj} and 
-fitted information \strong{fit}
+a list of updated \code{\link{gp}} object \code{obj} and 
+fitted information \code{fit}
 }
 \description{
 This function is a wraper to estimate parameters in the GaSP model with different
