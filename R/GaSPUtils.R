@@ -717,8 +717,19 @@ gp.mcmc <- function(obj, input.new=NULL, method="Cauchy_prior", prior=list(), pr
 #'         cov.model=list(family="matern", form="isotropic"))
 #'         
 #' fit.optim = gp.optim(obj, method="MPLE")
+#' fit.optim = gp.optim(obj, method="MPLE", 
+#'                     opt=list(method="L-BFGS-B"))
+#'
+#' obj = gp(formula=~1, output, input, 
+#'         param=list(range=4,tail=0.5, nugget=0.1,nu=.5),
+#'         smooth.est=TRUE,
+#'         cov.model=list(family="CH", form="isotropic"))
 #' 
-#' 
+#' fit2 = gp.optim(obj, method="MPLE", 
+#'                       opt=list(
+#'                       method="L-BFGS-B",
+#'                       upper=c(1e10, 5, 5, 3)))
+
 gp.optim <- function(obj, method="MMLE", opt=NULL){
 
 
