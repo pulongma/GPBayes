@@ -5,6 +5,7 @@
 
 \section{Changes in GPBayes version 0.1.0-7 (2025-9-03)}{
 	\itemize{
+		\item Added more examples to \link{gp.optim}.
 		\item Fixed a bug in MCMC algorithms when ARD and tensor correlations are used.
 		\item Fixed a bug in \link{gp.get.mcmc}. 
 		\item Fixed a bug in calculating the derivative of Matern ARD correlation functions.
